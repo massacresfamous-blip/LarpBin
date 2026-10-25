@@ -1,8 +1,13 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('./database/pastebin.db');
+const dbPath = path.resolve(__dirname, '..', 'database', 'breachbin.db');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+const db = new sqlite3.Database(dbPath);
+const logoText = fs.readFileSync(path.resolve(__dirname, '..', 'public', 'Media', 'logo.txt'), 'utf8');
 
 // Users route with login check and user info
 router.get('/', (req, res) => {
@@ -28,7 +33,7 @@ router.get('/', (req, res) => {
             if (err) {
                 throw err;
             }
-            res.render('pages/users', { users: rows, loggedIn: loggedIn, user: user });
+            res.render('pages/users', { users: rows, loggedIn: loggedIn, user: user, logoText });
         });
     });
 });

@@ -1,5 +1,5 @@
 body {
-    background-color: #060606 !important;
+    background-color: #000000 !important;
     height:100vh;
 }
 
@@ -24,8 +24,8 @@ h4, h5 {
 }
 
 .navbar-inverse {
-    background-color: #121212 !important;
-    border-color: #060606 !important;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
 }
 
 .panel {
@@ -33,12 +33,12 @@ h4, h5 {
 }
 
 .panel-body {
-    background-color: #161616;
+    background-color: #000000;
     display: flex; flex-wrap: wrap; flex-direction: row;
 }
 
 .panel-default > .panel-heading {
-    background-color: #161616;
+    background-color: #000000;
     color: #fff;
     border-color: rgba(0,0,0,.125);
 }
@@ -57,13 +57,13 @@ h4, h5 {
 .panel-information {
     clear: none;
     position: right;
-    color: #0d1e2c;
+    color: #ffffff;
     margin-left: auto;
 }
 
 .past {
     height: 100%;
-    background: rgb(12, 12, 12);
+    background: #000000;
 }
 
 pre {
@@ -77,7 +77,7 @@ pre {
     word-break: break-all;
     word-wrap: break-word;
     background-color: transparent;
-    border: 0px solid #ccc;
+    border: 0px solid #000000;
     border-radius: 0px;
     overflow: scroll;
     font-family: monospace, serif;
@@ -102,7 +102,7 @@ pre {
 }
 
 .comment {
-    border-bottom: solid 1px gray;
+    border-bottom: solid 1px #000000;
 }
 
 .bin-text {
@@ -132,7 +132,7 @@ pre {
 
 
 .bin-buttons {
-    background:#181818; /*#2d2e2f*/
+    background:#000000;
     border:0;
     box-shadow:-2px 0 3px rgba(0,0,0,0.2);
     -o-box-shadow:-2px 0 3px rgba(0,0,0,0.2);
@@ -155,7 +155,7 @@ pre {
 .u-perk {
     width: 100%;
     padding: 2px 5px;
-    border-bottom: solid 1px #404040;
+    border-bottom: solid 1px #000000;
 }
 
 .wealthy {
@@ -175,7 +175,7 @@ pre {
 }
 
 .btn {
-    background: #545454;
+    background: #000000;
     border: 0;
     border-radius: 2px;
     color: #fff;
@@ -187,7 +187,7 @@ pre {
 }
 
 .btn:hover {
-    background: #343434;
+    background: #000000;
     color: #fff;
 }
 
@@ -196,8 +196,8 @@ pre {
     letter-spacing: 2px;
 }
 .upgrade-container{
-    border: solid 1px rgb(40, 40, 40);
-    background-color: rgb(14, 14, 14);
+    border: solid 1px #000000;
+    background-color: #000000;
     border-radius: 2px;
     position: relative;
     /* padding: 15px; */
@@ -217,11 +217,11 @@ pre {
 }
 
 .colors-title{
-    background-image: linear-gradient(120deg, #777777 65%, #878787 65% 100%);
+    background-image: linear-gradient(120deg, #000000 65%, #000000 65% 100%);
 }
 .upgrade-container:hover{
-    border: solid 1px rgb(44, 44, 44);
-    background-color: rgb(18, 18, 18);
+    border: solid 1px #000000;
+    background-color: #000000;
 }
 .upgrade-container .upgrade-name{
     padding-top: 0px;
@@ -233,7 +233,7 @@ pre {
 .upgrade-container .perk-title{
     font-size: 14px;
     font-weight: bold;
-    color: #888888;
+    color: #ffffff;
     background-color: black;
     text-align: center;
     text-transform: uppercase;
@@ -244,7 +244,7 @@ pre {
     float: right;
 }
 .upgrade-container .upgrade-description{
-    color: rgb(200,200,200);
+    color: #ffffff;
     word-wrap: break-word;
     overflow-y: auto;
     height: 300px;
@@ -283,7 +283,7 @@ pre {
 input {
     line-height: 1.2;
     color: white;
-    background: #282828;
+    background: #000000;
     border: 0;
     border-radius: 2px;
     display: inline-block;
@@ -295,14 +295,14 @@ input {
 
 input[type="submit"]:hover {
     color: white;
-    background: #3d3d3d;
+    background: #000000;
     text-decoration: none;
 }
 
 input[type="submit"] {
     line-height: 1.2;
     color: white;
-    background: #282828;
+    background: #000000;
     border: 0;
     border-radius: 2px;
     display: block;
@@ -347,7 +347,7 @@ input[type="submit"] {
 }
 
 .paste-tab {
-    background-color: #181818;
+    background-color: #000000;
 }
 
 .h-captcha {
@@ -364,7 +364,7 @@ p {
 }
 
 .comment-text {
-    background-color: #545454;
+    background-color: #000000;
     border: none;
     border-radius: 2px;
     height: 50px;
@@ -410,7 +410,7 @@ td a:focus {
     padding: 8px;
     line-height: 1.5;
     vertical-align: inherit;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #000000;
     color: #fff;
 }
 
@@ -419,7 +419,7 @@ tr:nth-child(even) {
 }
 
 tr:nth-child(odd) {
-    background-color: #0d0d0d;
+    background-color: #000000;
 }
 
 table {
@@ -427,12 +427,12 @@ table {
 }
 
 .tb-highlight {
-    background-color: #181818;
+    background-color: #000000;
 }
 
 .sidebar-show {
-    background: #212121;
-    color: #888;
+    background: #000000;
+    color: #ffffff;
     font-size: 1em;
     height: 3.15em;
     padding: 1em 1em;
@@ -484,12 +484,12 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color: #131313;
+    background-color: #000000;
 }
 
 .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;
-    border-top: 1px solid #282828;
+    border-top: 1px solid #000000;
 }

@@ -1,8 +1,13 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('./database/pastebin.db');
+const dbPath = path.resolve(__dirname, '..', 'database', 'breachbin.db');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+const db = new sqlite3.Database(dbPath);
+const logoText = fs.readFileSync(path.resolve(__dirname, '..', 'public', 'Media', 'logo.txt'), 'utf8');
 
 // Search route
 router.get('/', (req, res) => {
@@ -34,11 +39,11 @@ router.get('/', (req, res) => {
         
         // Render the search results page with a message indicating no results
         if (rows.length === 0) {
-            return res.render('pages/search', { message: `Showing 0 result(s) for "${query}"`, type: type, pastes: [], users: [], query: query, loggedIn: false });
+            return res.render('pages/search', { message: `Showing 0 result(s) for "${query}"`, type: type, pastes: [], users: [], query: query, loggedIn: false, logoText });
         }
         
         // Render the search results page with the found results
-        res.render('pages/search', { pastes: rows, type: type, users: rows, query: query, message: `Showing ${rows.length} result(s) for "${query}"`, loggedIn: false });
+        res.render('pages/search', { pastes: rows, type: type, users: rows, query: query, message: `Showing ${rows.length} result(s) for "${query}"`, loggedIn: false, logoText });
     });
 });
 

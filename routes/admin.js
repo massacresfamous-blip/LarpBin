@@ -4,7 +4,9 @@ const fs = require('fs');
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('./database/pastebin.db');
+const dbPath = path.resolve(__dirname, '..', 'database', 'breachbin.db');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+const db = new sqlite3.Database(dbPath);
 
 // Middleware to check admin status
 function isAdmin(req, res, next) {
@@ -109,9 +111,9 @@ router.post('/toggle-pin', isAdmin, (req, res) => {
 
 // Download Database
 router.get('/download-db', isAdmin, (req, res) => {
-    const dbPath = path.resolve('./database/pastebin.db');
+    const dbPath = path.resolve(__dirname, '..', 'database', 'breachbin.db');
     
-    res.download(dbPath, 'pastebin.db', (err) => {
+    res.download(dbPath, 'breachbin.db', (err) => {
         if (err) {
             console.error('Error downloading database:', err);
             res.status(500).send('Error downloading database');
@@ -156,7 +158,7 @@ router.post('/upload-db', isAdmin, (req, res) => {
     }
 
     const dbFile = req.files.database;
-    const dbPath = path.resolve('./database/pastebin.db');
+    const dbPath = path.resolve(__dirname, '..', 'database', 'breachbin.db');
 
     dbFile.mv(dbPath, (err) => {
         if (err) {

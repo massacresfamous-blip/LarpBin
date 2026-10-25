@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
 const readline = require('readline');
+const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const path = require('path');
 
 // Set SQLite database path
-const dbPath = path.join(__dirname, 'database', 'pastebin.db');
+const dbDir = path.resolve(__dirname, 'database');
+fs.mkdirSync(dbDir, { recursive: true });
+const dbPath = path.join(dbDir, 'breachbin.db');
 
 // Connect to SQLite database
 const db = new sqlite3.Database(dbPath, (err) => {

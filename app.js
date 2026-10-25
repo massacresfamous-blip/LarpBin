@@ -1,4 +1,6 @@
 const express = require('express');
+const crypto = require('crypto');
+const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -18,8 +20,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(fileUpload());
+const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+    throw new Error('SESSION_SECRET must be set in production');
+}
 app.use(session({
-    secret: 'fewwwefwefewfnnfwewejfnknwefjwekfjbkwejbkef',
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false } // Use 'secure: true' if using HTTPS
@@ -47,12 +53,15 @@ passport.deserializeUser((user, done) => {
 });
 
 // Database setup
-const db = new sqlite3.Database('./database/pastebin.db', (err) => {
+const dbPath = path.resolve(__dirname, 'database', 'breachbin.db');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error(err.message);
         process.exit(1);
     }
-    console.log('Connected to the pastebin database.');
+    console.log('Connected to the BreachBin database at', dbPath);
     setupDatabase();
 });
 
@@ -141,7 +150,7 @@ app.use('/profile', require('./routes/profile'));
 app.use('/admin', require('./routes/admin'));
 
 // Start server
-const PORT = process.env.PORT || 2000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

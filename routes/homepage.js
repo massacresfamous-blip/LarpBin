@@ -1,8 +1,13 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('./database/pastebin.db');
+const dbPath = path.resolve(__dirname, '..', 'database', 'breachbin.db');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+const db = new sqlite3.Database(dbPath);
+const logoText = fs.readFileSync(path.resolve(__dirname, '..', 'public', 'Media', 'logo.txt'), 'utf8');
 
 router.get('/', (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -53,7 +58,8 @@ router.get('/', (req, res) => {
                         loggedIn: loggedIn, 
                         user: user, 
                         page, 
-                        totalPages 
+                        totalPages,
+                        logoText
                     });
                 });
             } else {
@@ -61,7 +67,8 @@ router.get('/', (req, res) => {
                     pastes: rows, 
                     loggedIn: loggedIn, 
                     page, 
-                    totalPages 
+                    totalPages,
+                    logoText
                 });
             }
         });

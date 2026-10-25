@@ -2,7 +2,9 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.join(__dirname, 'pastebin.db');
+const dbDir = path.resolve(__dirname);
+fs.mkdirSync(dbDir, { recursive: true });
+const dbPath = path.join(dbDir, 'breachbin.db');
 
 function initializeDatabase() {
     if (!fs.existsSync(dbPath)) {

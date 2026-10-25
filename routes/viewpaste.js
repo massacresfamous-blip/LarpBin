@@ -1,8 +1,12 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('./database/pastebin.db');
+const dbPath = path.resolve(__dirname, '..', 'database', 'breachbin.db');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+const db = new sqlite3.Database(dbPath);
 
 router.get('/', (req, res) => {
     const { id } = req.query;

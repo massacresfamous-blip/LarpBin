@@ -34,7 +34,7 @@ div.paste-properties span{
     display: block;
 }
 .uinfo a:hover{
-    background-color: #2d2d2d;
+    background-color: #000000;
     text-decoration: none;
     color: inherit;
 }
@@ -88,7 +88,7 @@ table.table tbody tr.hidden-post:hover{
 a.button{
     display: inline-block;
     padding: 5px 8px;
-    background-color: #232323;
+    background-color: #000000;
     color: white;
     border-radius: 2px;
     text-transform: uppercase;
@@ -101,7 +101,7 @@ a.button:focus{
     text-decoration: none;
 }
 a.button:hover{
-    background-color: #2e2e2e;
+    background-color: #000000;
     text-decoration:none;
 }
 a.button.button-red{
@@ -162,7 +162,7 @@ input[type="color"] {
     align-items: center;
     margin-top: 20px;
     gap: 6px;
-    background: #111;
+    background: #000000;
     padding: 8px;
     border-radius: 6px;
     width: fit-content;
@@ -176,10 +176,10 @@ input[type="color"] {
     justify-content: center;
     width: 36px;
     height: 36px;
-    background-color: #222;
-    color: #ddd;
+    background-color: #000000;
+    color: #ffffff;
     text-decoration: none;
-    border: 1px solid #333;
+    border: 1px solid #000000;
     border-radius: 6px;
     font-size: 15px;
     font-weight: 500;
@@ -187,9 +187,9 @@ input[type="color"] {
 }
 
 .page-btn:hover {
-    background-color: #333;
+    background-color: #000000;
     color: #fff;
-    border-color: #666;
+    border-color: #000000;
 }
 
 .page-btn.active {

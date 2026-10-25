@@ -100,6 +100,7 @@ dist
 
 # database
 database/pastebin.db
+database/breachbin.db
 
 # Gatsby files
 .cache/
