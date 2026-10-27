@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/header') %>
+    <style>
+        .settings-shell {
+            width: min(880px, calc(100% - 32px));
+            margin: 42px auto 72px;
+            padding: clamp(20px, 4vw, 42px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid rgba(220, 57, 68, 0.86);
+            border-radius: 14px;
+            background: rgba(10, 10, 12, 0.78);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+            backdrop-filter: blur(16px);
+            color: #fff;
+        }
+
+        .settings-heading {
+            margin-bottom: 26px;
+        }
+
+        .settings-eyebrow {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff7379;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .settings-heading h1 {
+            margin: 0 0 8px;
+            color: #fff;
+            font-size: clamp(25px, 4vw, 34px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .settings-heading p {
+            max-width: 560px;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .settings-card {
+            padding: clamp(14px, 2.5vw, 22px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .background-preview {
+            position: relative;
+            display: flex;
+            min-height: clamp(200px, 34vw, 300px);
+            align-items: flex-end;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            background-color: #09090b;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .background-preview::after {
+            position: absolute;
+            inset: 45% 0 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+            content: "";
+            pointer-events: none;
+        }
+
+        .background-preview-caption {
+            position: relative;
+            z-index: 1;
+            padding: 18px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            text-transform: uppercase;
+        }
+
+        .background-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 14px;
+        }
+
+        .background-form label {
+            display: block;
+            min-width: 0;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .background-form input[type="file"] {
+            display: block;
+            width: 100%;
+            margin-top: 9px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 12px;
+        }
+
+        .background-form input[type="file"]::file-selector-button {
+            margin-right: 12px;
+            padding: 7px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+            transition: background 0.18s ease, border-color 0.18s ease;
+        }
+
+        .background-form input[type="file"]::file-selector-button:hover {
+            border-color: rgba(255, 115, 121, 0.6);
+            background: rgba(255, 85, 95, 0.15);
+        }
+
+        .background-form button,
+        .reset-form button {
+            min-height: 40px;
+            padding: 0 16px;
+            border: 1px solid rgba(255, 115, 121, 0.48);
+            border-radius: 5px;
+            background: #c51e2a;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .background-form button:hover,
+        .reset-form button:hover {
+            transform: translateY(-1px);
+            background: #e02d39;
+            box-shadow: 0 6px 18px rgba(197, 30, 42, 0.22);
+        }
+
+        .background-form small {
+            grid-column: 1 / -1;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .reset-form {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        .reset-form button {
+            border-color: rgba(255, 255, 255, 0.16);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.68);
+        }
+
+        .reset-form button:hover {
+            border-color: rgba(255, 85, 95, 0.45);
+            background: rgba(255, 85, 95, 0.08);
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .settings-shell button:focus-visible,
+        .background-form input:focus-visible {
+            outline: 2px solid #ff7379;
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .settings-shell {
+                width: calc(100% - 20px);
+                margin: 20px auto 40px;
+                padding: 18px 14px;
+            }
+
+            .background-preview {
+                min-height: 190px;
+            }
+
+            .background-form {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .background-form button {
+                width: 100%;
+            }
+
+            .background-form small {
+                grid-column: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .background-form input[type="file"]::file-selector-button,
+            .background-form button,
+            .reset-form button {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">BREACH BIN</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/newpaste">New Paste</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/upgrades">Upgrades</a></li>
+                <li><a href="/hoa">HOA</a></li>
+                <li><a href="/settings">Settings</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/changelog">Changelog</a></li>
+                        <li><a href="/donate">Donate</a></li>
+                        <li><a href="/prices">Prices</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/profile?uid=<%= user.id %>">Profile</a></li>
+                <li><a href="/login/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="settings-shell">
+        <header class="settings-heading">
+            <span class="settings-eyebrow">Personalize your space</span>
+            <h1>Appearance</h1>
+            <p>Give your profile a look of its own. Your background appears across BreachBin whenever you’re signed in.</p>
+        </header>
+
+        <section class="settings-card" aria-labelledby="background-heading">
+            <h2 id="background-heading" class="settings-eyebrow">Profile background</h2>
+            <div class="background-preview" id="background-preview" role="img" aria-label="Current background preview" style="background-image: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.2)), url('<%= currentBackground || '/Media/breachbin-background.webp' %>')">
+                <span class="background-preview-caption">Your background preview</span>
+            </div>
+
+            <form class="background-form" action="/settings/background" method="post" enctype="multipart/form-data">
+                <label for="background-file">
+                    Choose an image
+                    <input id="background-file" type="file" name="background" accept="image/png,image/jpeg,image/gif,image/webp" required>
+                </label>
+                <button type="submit">Save background</button>
+                <small>PNG, JPEG, GIF, or WebP · Up to 8 MB · Animated backgrounds are supported</small>
+            </form>
+        </section>
+
+        <% if (currentBackground) { %>
+            <form class="reset-form" action="/settings/background/reset" method="post">
+                <button type="submit">Restore default background</button>
+            </form>
+        <% } %>
+    </main>
+    <script>
+        const backgroundInput = document.getElementById('background-file');
+        const backgroundPreview = document.getElementById('background-preview');
+        let previewObjectUrl;
+
+        backgroundInput.addEventListener('change', () => {
+            const file = backgroundInput.files && backgroundInput.files[0];
+            if (!file) return;
+
+            if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+            previewObjectUrl = URL.createObjectURL(file);
+            backgroundPreview.style.backgroundImage =
+                `linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.2)), url("${previewObjectUrl}")`;
+            backgroundPreview.setAttribute('aria-label', `Selected background preview: ${file.name}`);
+        });
+    </script>
+</body>
+
+</html>

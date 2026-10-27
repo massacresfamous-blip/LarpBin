@@ -18,4 +18,16 @@ npm install
 npm run start
 ```
 
-The app runs on port 3000 by default, which avoids the local port conflict in this environment.
+The app runs on port 4000 by default. Set `PORT` to use a different port.
+
+Sessions are stored in the SQLite database and survive application restarts. In production, set a stable `SESSION_SECRET`; in development, the app generates and saves one in `database/session-secret`.
+
+## Windows Command Prompt app
+
+The terminal client provides an animated BreachBin logo, signed-in global chat, and commands for reading and creating pastes. It requires Node.js 18 or newer and an available BreachBin server.
+
+```cmd
+npm run cli -- --server https://your-breachbin-server
+```
+
+The client defaults to the hosted BreachBin server at `https://spidery-spooky-monster-p795x44x6w5635x9-4000.app.github.dev`; users do not need to run a local server. Sign in with an existing BreachBin account, then use `/help` to see the available commands. Chat and paste commands require sign-in; passwords are not stored by the client. The terminal client requires Node.js 18 or newer.

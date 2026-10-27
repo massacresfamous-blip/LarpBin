@@ -5,258 +5,309 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="/css/admin.css">
     <%- include('../partials/header') %>
-
-        <style>
-            /* Dark Mode Styling */
-            body {
-                background-color: #121212;
-                color: #e0e0e0;
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 20px;
-            }
-
-            h1,
-            h2 {
-                color: #ffffff;
-            }
-
-            .search-bar {
-                width: 100%;
-                max-width: 400px;
-                padding: 10px;
-                margin-bottom: 15px;
-                border: 1px solid #333;
-                background: #222;
-                color: #fff;
-                border-radius: 5px;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                background: #1e1e1e;
-                border-radius: 8px;
-                overflow: hidden;
-                margin-bottom: 30px;
-            }
-
-            th,
-            td {
-                padding: 12px;
-                text-align: left;
-                border-bottom: 1px solid #333;
-            }
-
-            th {
-                background: #333;
-                color: #fff;
-            }
-
-            tr:hover {
-                background: #292929;
-            }
-
-            button {
-                background: #ff5252;
-                color: white;
-                border: none;
-                padding: 8px 14px;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: 0.3s;
-            }
-
-            button:hover {
-                background: #ff3333;
-            }
-
-            .secondary-btn {
-                background: #444;
-            }
-
-            .secondary-btn:hover {
-                background: #666;
-            }
-
-            .database-section {
-                margin-top: 30px;
-                padding: 20px;
-                background: #1a1a1a;
-                border-radius: 8px;
-            }
-
-            .database-section input {
-                padding: 10px;
-                border: 1px solid #444;
-                background: #222;
-                color: #fff;
-                border-radius: 5px;
-                margin-right: 10px;
-            }
-        </style>
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 
-<body>
-    <h1>Admin Panel</h1>
-    <p>Welcome, <%= username %>
-    </p>
+<body class="admin-page">
+    <main class="admin-shell">
+        <header class="admin-header">
+            <div>
+                <p class="admin-eyebrow">BreachBin management</p>
+                <h1>Admin panel</h1>
+                <p class="admin-welcome">Signed in as <strong><%= username %></strong></p>
+            </div>
+            <a class="admin-home-link" href="/">Back to site <span aria-hidden="true">↗</span></a>
+        </header>
 
-    <!-- Pastes Section -->
-    <h2>Pastes</h2>
-    <input type="text" id="pasteSearch" class="search-bar" placeholder="Search pastes..." oninput="loadPastes()">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>User</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Created At</th>
-                <th>Pinned</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="pasteTable"></tbody>
-    </table>
+        <section class="admin-card account-switcher" aria-labelledby="account-switch-title">
+            <div class="section-heading">
+                <div>
+                    <p class="admin-eyebrow">Quick access</p>
+                    <h2 id="account-switch-title">Switch account</h2>
+                    <p>View the site as another account. Your admin session is kept so you can switch back anytime.</p>
+                </div>
+                <span class="section-icon" aria-hidden="true">⇄</span>
+            </div>
+            <form id="accountSwitchForm" action="/admin/switch-account" method="post" class="account-switch-form">
+                <label class="visually-hidden" for="accountSearch">Search accounts</label>
+                <input id="accountSearch" type="search" placeholder="Search accounts by username…" autocomplete="off">
+                <label class="visually-hidden" for="accountSelect">Select an account</label>
+                <select id="accountSelect" name="accountId" required>
+                    <option value="">Search for an account</option>
+                </select>
+                <button type="submit" class="button button-primary">Switch account</button>
+            </form>
+            <p id="accountSearchStatus" class="form-status" aria-live="polite"></p>
+        </section>
 
-    <!-- Users Section -->
-    <h2>Users</h2>
-    <input type="text" id="userSearch" class="search-bar" placeholder="Search users..." oninput="loadUsers()">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="userTable"></tbody>
-    </table>
+        <section class="admin-card data-section" aria-labelledby="pastes-title">
+            <div class="section-heading">
+                <div>
+                    <p class="admin-eyebrow">Content</p>
+                    <h2 id="pastes-title">Pastes</h2>
+                    <p>Review, pin, and remove published pastes.</p>
+                </div>
+                <label class="search-control">
+                    <span class="visually-hidden">Search pastes</span>
+                    <input type="search" id="pasteSearch" placeholder="Search pastes…" oninput="loadPastes()">
+                </label>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Title</th>
+                            <th>Preview</th>
+                            <th>Created</th>
+                            <th>Pinned</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pasteTable"><tr><td colspan="7" class="table-message">Loading pastes…</td></tr></tbody>
+                </table>
+            </div>
+        </section>
 
-    <!-- Comments Section -->
-    <h2>Comments</h2>
-    <input type="text" id="commentSearch" class="search-bar" placeholder="Search comments..." oninput="loadComments()">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>User</th>
-                <th>Comment</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="commentTable"></tbody>
-    </table>
+        <section class="admin-card data-section" aria-labelledby="users-title">
+            <div class="section-heading">
+                <div>
+                    <p class="admin-eyebrow">Community</p>
+                    <h2 id="users-title">Users</h2>
+                    <p>Manage account roles and custom rules.</p>
+                </div>
+                <label class="search-control">
+                    <span class="visually-hidden">Search users</span>
+                    <input type="search" id="userSearch" placeholder="Search users…" oninput="loadUsers()">
+                </label>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Custom rules</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTable"><tr><td colspan="6" class="table-message">Loading users…</td></tr></tbody>
+                </table>
+            </div>
+        </section>
 
-    <!-- Database Management -->
-    <div class="database-section">
-        <h2>Database Management</h2>
-        <a href="/admin/download-db" download>
-            <button class="secondary-btn">Download Database</button>
-        </a>
+        <section class="admin-card data-section" aria-labelledby="comments-title">
+            <div class="section-heading">
+                <div>
+                    <p class="admin-eyebrow">Community</p>
+                    <h2 id="comments-title">Comments</h2>
+                    <p>Search and moderate comments.</p>
+                </div>
+                <label class="search-control">
+                    <span class="visually-hidden">Search comments</span>
+                    <input type="search" id="commentSearch" placeholder="Search comments…" oninput="loadComments()">
+                </label>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Comment</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="commentTable"><tr><td colspan="5" class="table-message">Loading comments…</td></tr></tbody>
+                </table>
+            </div>
+        </section>
 
-        <form id="uploadForm">
-            <input type="file" id="databaseFile" required>
-            <button type="submit">Upload Database</button>
-        </form>
-    </div>
-
-    <br>
-    <a href="/" style="color: #ff5252;">Back to Home</a>
+        <section class="admin-card database-section" aria-labelledby="database-title">
+            <div class="section-heading">
+                <div>
+                    <p class="admin-eyebrow">Storage</p>
+                    <h2 id="database-title">Database management</h2>
+                    <p>Download a database backup or upload a replacement.</p>
+                </div>
+            </div>
+            <div class="database-actions">
+                <a class="button button-secondary" href="/admin/download-db">Download database</a>
+                <form id="uploadForm">
+                    <label for="databaseFile">Database file</label>
+                    <input type="file" id="databaseFile" required>
+                    <button type="submit" class="button button-primary">Upload database</button>
+                </form>
+            </div>
+        </section>
+    </main>
 
     <script>
-        function fetchData(url, callback) {
-            fetch(url)
-                .then(res => res.json())
-                .then(data => callback(data))
-                .catch(err => console.error('Error:', err));
+        const roleOptions = ['Criminal', 'Council', 'Moderator', 'Demon', 'Admin', 'Member'];
+        let accountSearchTimer;
+
+        function escapeHtml(value) {
+            const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+            return String(value ?? '').replace(/[&<>"']/g, character => entities[character]);
+        }
+
+        async function fetchData(url) {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Request failed (${response.status})`);
+            return response.json();
+        }
+
+        async function loadTable(url, tableId, renderRows, columnCount) {
+            const table = document.getElementById(tableId);
+            try {
+                const rows = await fetchData(url);
+                table.innerHTML = rows.length ? rows.map(renderRows).join('') :
+                    `<tr><td colspan="${columnCount}" class="table-message">No results found.</td></tr>`;
+            } catch (error) {
+                console.error(`Unable to load ${tableId}:`, error);
+                table.innerHTML = `<tr><td colspan="${columnCount}" class="table-message error-message">Unable to load data. Please try again.</td></tr>`;
+            }
         }
 
         function loadPastes() {
-            fetchData(`/admin/pastes?search=${document.getElementById("pasteSearch").value}`, data => {
-                const table = document.getElementById("pasteTable");
-                table.innerHTML = "";
-                data.forEach(paste => {
-                    table.innerHTML += `
-                        <tr>
-                            <td>${paste.id}</td>
-                            <td>${paste.user_name}</td>
-                            <td>${paste.title}</td>
-                            <td>${paste.content.length > 10 ? paste.content.slice(0, 10) + '...' : paste.content}</td>
-                            <td>${paste.created_at}</td>
-                            <td>
-                                 <button onclick="togglePin(${paste.id}, ${paste.pinned})">
-                                ${paste.pinned ? 'Pinned' : 'Pin'}
-                                 </button>
-                            </td>
-                           <td><button onclick="deleteItem('/admin/delete', ${paste.id}, loadPastes)">Delete</button></td>
-                        </tr>`;
-                });
-            });
+            const search = encodeURIComponent(document.getElementById('pasteSearch').value);
+            loadTable(`/admin/pastes?search=${search}`, 'pasteTable', paste => `
+                <tr>
+                    <td>${paste.id}</td>
+                    <td>${escapeHtml(paste.user_name)}</td>
+                    <td>${escapeHtml(paste.title)}</td>
+                    <td>${escapeHtml(String(paste.content || '').slice(0, 80))}${String(paste.content || '').length > 80 ? '…' : ''}</td>
+                    <td>${escapeHtml(paste.created_at)}</td>
+                    <td><button class="button button-small ${paste.pinned ? 'button-secondary' : 'button-muted'}" onclick="togglePin(${paste.id}, ${paste.pinned ? 1 : 0})">${paste.pinned ? 'Pinned' : 'Pin'}</button></td>
+                    <td><button class="button button-small button-danger" onclick="deleteItem('/admin/delete', ${paste.id}, loadPastes, 'pasteId')">Delete</button></td>
+                </tr>`, 7);
         }
 
         function loadUsers() {
-            fetchData(`/admin/users?search=${document.getElementById("userSearch").value}`, data => {
-                const table = document.getElementById("userTable");
-                table.innerHTML = "";
-                data.forEach(user => {
-                    table.innerHTML += `
-                        <tr>
-                            <td>${user.id}</td>
-                            <td>${user.username}</td>
-                            <td>${user.email}</td>
-                            <td><button onclick="deleteItem('/admin/delete-user', ${user.id}, loadUsers)">Delete</button></td>
-                        </tr>`;
-                });
-            });
+            const search = encodeURIComponent(document.getElementById('userSearch').value);
+            loadTable(`/admin/users?search=${search}`, 'userTable', user => {
+                const selectedRole = roleOptions.includes(user.role) ? user.role : 'Member';
+                const options = roleOptions.map(role =>
+                    `<option value="${role}" ${role === selectedRole ? 'selected' : ''}>${role}</option>`
+                ).join('');
+                return `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${escapeHtml(user.username)}</td>
+                        <td>${escapeHtml(user.email)}</td>
+                        <td><select class="table-select" id="user-role-${user.id}">${options}</select></td>
+                        <td><textarea class="rules-input" id="user-rules-${user.id}" maxlength="1000">${escapeHtml(user.custom_rules || '')}</textarea></td>
+                        <td class="action-cell">
+                            <button class="button button-small button-secondary" onclick="saveUserRules(${user.id})">Save</button>
+                            <button class="button button-small button-danger" onclick="deleteItem('/admin/delete-user', ${user.id}, loadUsers, 'userId')">Delete</button>
+                        </td>
+                    </tr>`;
+            }, 6);
         }
 
         function loadComments() {
-            fetchData(`/admin/comments?search=${document.getElementById("commentSearch").value}`, data => {
-                const table = document.getElementById("commentTable");
-                table.innerHTML = "";
-                data.forEach(comment => {
-                    table.innerHTML += `
-                        <tr>
-                            <td>${comment.id}</td>
-                            <td>${comment.username || 'Anonymous'}</td>
-                            <td>${paste.content.length > 10 ? paste.content.slice(0, 10) + '...' : paste.content}</td>
-                           <td><button onclick="deleteItem('/admin/delete-comment', ${comment.id}, loadComments)">Delete</button></td>
-                        </tr>`;
+            const search = encodeURIComponent(document.getElementById('commentSearch').value);
+            loadTable(`/admin/comments?search=${search}`, 'commentTable', comment => `
+                <tr>
+                    <td>${comment.id}</td>
+                    <td>${escapeHtml(comment.username || 'Anonymous')}</td>
+                    <td>${escapeHtml(comment.comment)}</td>
+                    <td>${escapeHtml(comment.created_at)}</td>
+                    <td><button class="button button-small button-danger" onclick="deleteItem('/admin/delete-comment', ${comment.id}, loadComments, 'commentId')">Delete</button></td>
+                </tr>`, 5);
+        }
+
+        async function loadAccounts() {
+            const search = encodeURIComponent(document.getElementById('accountSearch').value.trim());
+            const select = document.getElementById('accountSelect');
+            const status = document.getElementById('accountSearchStatus');
+            try {
+                const accounts = await fetchData(`/admin/accounts?search=${search}`);
+                select.innerHTML = '<option value="">Select an account…</option>' + accounts.map(account =>
+                    `<option value="${account.id}">${escapeHtml(account.username)} · ${escapeHtml(account.role)}</option>`
+                ).join('');
+                status.textContent = accounts.length ? `${accounts.length} account${accounts.length === 1 ? '' : 's'} found.` : 'No matching accounts found.';
+            } catch (error) {
+                console.error('Unable to load accounts:', error);
+                select.innerHTML = '<option value="">Accounts unavailable</option>';
+                status.textContent = 'Unable to load accounts. Please try again.';
+            }
+        }
+
+        async function saveUserRules(userId) {
+            const body = new URLSearchParams({
+                userId,
+                role: document.getElementById(`user-role-${userId}`).value,
+                customRules: document.getElementById(`user-rules-${userId}`).value
+            });
+            try {
+                const response = await fetch('/admin/update-user-rules', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body
                 });
-            });
+                if (!response.ok) throw new Error(`Unable to save user rules (${response.status})`);
+                loadUsers();
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
-        function deleteItem(url, id, reload) {
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `pasteId=${encodeURIComponent(id)}` // Properly encoding the ID
-            }).then(() => reload());
+        async function deleteItem(url, id, reload, idField) {
+            if (!confirm('Delete this item? This action cannot be undone.')) return;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ [idField]: id })
+                });
+                if (!response.ok) throw new Error(`Unable to delete item (${response.status})`);
+                reload();
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
-        function togglePin(id, isPinned) {
-            fetch('/admin/toggle-pin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `pasteId=${id}&pinned=${isPinned ? 0 : 1}`
-            }).then(() => {
+        async function togglePin(id, isPinned) {
+            try {
+                const response = await fetch('/admin/toggle-pin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ pasteId: id, pinned: isPinned ? 0 : 1 })
+                });
+                if (!response.ok) throw new Error(`Unable to update pinned status (${response.status})`);
                 loadPastes();
-            });
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
-        document.getElementById("uploadForm").addEventListener("submit", e => {
-            e.preventDefault();
-            const formData = new FormData();
-            formData.append("database", document.getElementById("databaseFile").files[0]);
-            fetch('/admin/upload-db', { method: 'POST', body: formData })
-                .then(() => alert('Database uploaded successfully!'));
+        document.getElementById('accountSearch').addEventListener('input', () => {
+            clearTimeout(accountSearchTimer);
+            accountSearchTimer = setTimeout(loadAccounts, 200);
         });
 
+        document.getElementById('uploadForm').addEventListener('submit', async event => {
+            event.preventDefault();
+            const file = document.getElementById('databaseFile').files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append('database', file);
+            try {
+                const response = await fetch('/admin/upload-db', { method: 'POST', body: formData });
+                if (!response.ok) throw new Error(`Unable to upload database (${response.status})`);
+                alert('Database uploaded successfully.');
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        loadAccounts();
         loadPastes();
         loadUsers();
         loadComments();

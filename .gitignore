@@ -101,6 +101,8 @@ dist
 # database
 database/pastebin.db
 database/breachbin.db
+database/session-secret
+public/uploads/
 
 # Gatsby files
 .cache/

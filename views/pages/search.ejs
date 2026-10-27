@@ -17,21 +17,24 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/newpaste">New Paste</a></li>
                     <li><a href="/users">Users</a></li>
-                    <li><a href="/">Upgrades</a></li>
-                    <li><a href="/">Wall of Clowns</a></li>
+                    <li><a href="/upgrades">Upgrades</a></li>
+                    <li><a href="/hoa">HOA</a></li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/">FAQ</a></li>
-                            <li><a href="/">Donate</a></li>
-                            <li><a href="/">Prices</a></li>
-                            <li><a href="/">Contact</a></li>
+                            <li><a href="/faq">FAQ</a></li>
+                            <li><a href="/terms">Terms of Service</a></li>
+                            <li><a href="/changelog">Changelog</a></li>
+                            <li><a href="/donate">Donate</a></li>
+                            <li><a href="/prices">Prices</a></li>
+                            <li><a href="/contact">Contact</a></li>
                         </ul>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/settings">Settings</a></li>
                     <li><a href="/profile?uid=<%= user.id %>">Profile</a></li>
                     <li><a href="/login/logout">Logout</a></li>
                 </ul>
@@ -48,17 +51,19 @@
                         <li><a href="/">Home</a></li>
                         <li><a href="/newpaste">New Paste</a></li>
                         <li><a href="/users">Users</a></li>
-                        <li><a href="/">Upgrades</a></li>
-                        <li><a href="/">Wall of Clowns</a></li>
+                        <li><a href="/upgrades">Upgrades</a></li>
+                        <li><a href="/hoa">HOA</a></li>
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/">FAQ</a></li>
-                                <li><a href="/">Donate</a></li>
-                                <li><a href="/">Prices</a></li>
-                                <li><a href="/">Contact</a></li>
+                                <li><a href="/faq">FAQ</a></li>
+                                <li><a href="/terms">Terms of Service</a></li>
+                                <li><a href="/changelog">Changelog</a></li>
+                                <li><a href="/donate">Donate</a></li>
+                                <li><a href="/prices">Prices</a></li>
+                                <li><a href="/contact">Contact</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -118,11 +123,11 @@
                                             <tbody>
                                                 <% pastes.forEach(paste=> { %>
                                                     <tr>
-                                                        <td><a style="color: <%= paste.text_color %> !important;"
+                                                        <td><a style="color: <%= paste.text_color %>;"
                                                                 href="/paste/<%= paste.id %>">
                                                                 <%= paste.title %>
                                                             </a></td>
-                                                        <td><a style="color: <%= paste.text_color %> !important;"
+                                                        <td><a style="color: <%= paste.text_color %>;"
                                                                 href="/profile/<%= paste.user_id %>">
                                                                 <%= paste.user_name %>
                                                             </a></td>

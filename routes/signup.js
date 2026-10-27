@@ -25,7 +25,10 @@ router.post('/', async (req, res) => {
     const createdAt = new Date().toISOString(); // Get current timestamp
 
     db.run(
-        `INSERT INTO users (username, email, password, created_at, admin) VALUES (?, ?, ?, ?, 0)`,
+        `INSERT INTO users (username, email, password, created_at, admin, role)
+         SELECT ?, ?, ?, ?,
+             CASE WHEN NOT EXISTS (SELECT 1 FROM users) THEN 1 ELSE 0 END,
+             CASE WHEN NOT EXISTS (SELECT 1 FROM users) THEN 'Admin' ELSE 'Member' END`,
         [username, email, hashedPassword, createdAt],
         function(err) {
             if (err) {

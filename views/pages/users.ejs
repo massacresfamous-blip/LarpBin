@@ -3,6 +3,187 @@
 
 <head>
     <%- include('../partials/header') %>
+    <style>
+        .users-page {
+            max-width: 1040px;
+            margin: 0 auto 48px;
+            padding: 12px 24px;
+            background: transparent;
+        }
+
+        .users-intro {
+            margin-bottom: 36px;
+            text-align: center;
+        }
+
+        .users-intro h1 {
+            margin: 0 0 6px;
+            color: #fff;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .users-intro p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+        }
+
+        .users-search {
+            display: flex;
+            max-width: 460px;
+            margin: 20px auto 0;
+        }
+
+        .users-search input[type="text"] {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-right: 0;
+            background: rgba(0, 0, 0, 0.22);
+            color: #fff;
+        }
+
+        .users-search input[type="submit"] {
+            padding: 0 16px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-weight: 700;
+            transition: background 0.18s ease;
+        }
+
+        .users-search input[type="submit"]:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .role-section {
+            margin-top: 26px;
+            background: transparent;
+        }
+
+        .role-section[hidden] {
+            display: none;
+        }
+
+        .role-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 0 auto 24px;
+        }
+
+        .role-filter {
+            padding: 7px 11px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 2px;
+            background: rgba(0, 0, 0, 0.18);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            transition: background 0.18s ease, border-color 0.18s ease;
+        }
+
+        .role-filter:hover,
+        .role-filter[aria-pressed="true"] {
+            border-color: rgba(255, 255, 255, 0.48);
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .role-filter:focus-visible {
+            outline: 2px solid rgba(255, 255, 255, 0.75);
+            outline-offset: 2px;
+        }
+
+        .role-section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 0 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .role-section-heading h2 {
+            margin: 0;
+        }
+
+        .role-section-count {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 12px;
+        }
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 8px 14px;
+            min-width: 0;
+            padding: 12px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            transition: background 0.18s ease;
+        }
+
+        .user-card:hover {
+            background: rgba(255, 255, 255, 0.045);
+        }
+
+        .user-card-name {
+            flex: 1;
+            overflow-wrap: anywhere;
+            font-size: 15px;
+        }
+
+        .user-card-meta {
+            color: rgba(255, 255, 255, 0.48);
+            font-size: 11px;
+        }
+
+        .user-card-count {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .users-empty {
+            padding: 25px;
+            color: rgba(255, 255, 255, 0.65);
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .users-page {
+                padding: 12px 8px;
+            }
+
+            .users-intro h1 {
+                font-size: 22px;
+            }
+
+            .user-card {
+                flex-wrap: wrap;
+                gap: 4px 10px;
+            }
+
+            .user-card-name {
+                flex-basis: calc(100% - 80px);
+            }
+
+            .user-card-meta {
+                flex-basis: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -17,16 +198,16 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/newpaste">New Paste</a></li>
                     <li><a href="/users">Users</a></li>
-                    <li><a href="/upgrade">Upgrades</a></li>
-                    <li><a href="/wallofclowns">Wall of Clowns</a></li>
+                    <li><a href="/upgrades">Upgrades</a></li>
+                    <li><a href="/hoa">HOA</a></li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="/faq">FAQ</a></li>
-                            <li><a href="/viewpaste?id=55038">ToS</a></li>
-                            <li><a href="/viewpaste?id=29175">Changelog</a></li>
+                            <li><a href="/terms">Terms of Service</a></li>
+                            <li><a href="/changelog">Changelog</a></li>
                             <li><a href="/donate">Donate</a></li>
                             <li><a href="/prices">Prices</a></li>
                             <li><a href="/contact">Contact</a></li>
@@ -34,7 +215,8 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/profile?uid=<%= user.id %>">Profile</a></li>
+                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="/profile?uid=<%= user ? user.id : '' %>">Profile</a></li>
                     <li><a href="/login/logout">Logout</a></li>
                 </ul>
             </div>
@@ -50,19 +232,19 @@
                         <li><a href="/">Home</a></li>
                         <li><a href="/newpaste">New Paste</a></li>
                         <li><a href="/users">Users</a></li>
-                        <li><a href="/upgrade">Upgrades</a></li>
-                        <li><a href="/wallofclowns">Wall of Clowns</a></li>
+                        <li><a href="/upgrades">Upgrades</a></li>
+                        <li><a href="/hoa">HOA</a></li>
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/faq.php">FAQ</a></li>
-                                <li><a href="/viewpaste.php?id=55038">ToS</a></li>
-                                <li><a href="/viewpaste.php?id=29175">Changelog</a></li>
-                                <li><a href="/donate.php">Donate</a></li>
-                                <li><a href="/prices.php">Prices</a></li>
-                                <li><a href="/contact.php">Contact</a></li>
+                                <li><a href="/faq">FAQ</a></li>
+                                <li><a href="/terms">Terms of Service</a></li>
+                                <li><a href="/changelog">Changelog</a></li>
+                                <li><a href="/donate">Donate</a></li>
+                                <li><a href="/prices">Prices</a></li>
+                                <li><a href="/contact">Contact</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -75,61 +257,70 @@
             <% } %>
 
 
-                <div class="container">
-                    <div class="col-lg-12 col-md-12 col-12"><br>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="text-center">
+                <main class="users-page">
+                    <header class="users-intro">
                         <pre class="ascii-logo"><%= logoText %></pre>
-                        <h4><b><a class="text-center-color" href="https://t.me/skidbinsite" rel="norefferer"
-                                    target="_blank">Official
-                                    BreachBin
-                                    Telegram</a></b></h4><br>
-                    </div>
-
-                    <div class="div-center">
-                        <form id="search-form" method="GET" action="/search">
-                            <input name="query" type="text" placeholder="Search for.." value="">
-                            <input type="hidden" name="type" value="users"> <!-- Predefined type -->
+                        <h1>Community members</h1>
+                        <p>Browse users by role and explore their public profiles.</p>
+                        <form class="users-search" id="search-form" method="GET" action="/search">
+                            <input name="query" type="text" placeholder="Search users..." value="">
+                            <input type="hidden" name="type" value="users">
                             <input type="submit" value="Search">
                         </form>
-                    </div>
+                    </header>
 
-                    <div class="container">
-                        <div class="col-lg-12 col-md-12 col-12"><br>
-                        </div>
-                    </div>
+                    <% const roleOrder = ['Admin', 'Council', 'Moderator', 'Demon', 'Criminal', 'Member']; %>
+                    <% const roleGroups = roleOrder.map(role => ({ role, users: users.filter(user => String(user.role || 'Member').toLowerCase() === role.toLowerCase()) })); %>
+                    <% const otherRoles = [...new Set(users.map(user => String(user.role || 'Member')).filter(role => !roleOrder.some(knownRole => knownRole.toLowerCase() === role.toLowerCase())))].sort((a, b) => a.localeCompare(b)); %>
+                    <% otherRoles.forEach(role => roleGroups.push({ role, users: users.filter(user => String(user.role || 'Member').toLowerCase() === role.toLowerCase()) })); %>
+                    <% const visibleRoleGroups = roleGroups.filter(group => group.users.length); %>
 
-                    <table class="table table-hover">
-                        <thead class="tb-highlight">
-                            <tr>
-                                <th>User ID</th>
-                                <th>Username</th>
-                                <th>Joined</th>
-                                <th>Paste Count</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% users.forEach(user=> { %>
-                                <tr class="admin-post">
-                                    <td>
-                                        <%= user.id %>
-                                    </td>
-                                    <td><a class="paste-link" style="color: #FF2400; font-weight:bold;"
-                                            href="/profile?uid=<%= user.id %>">
-                                            <%= user.username %>
-                                        </a></td>
-                                    <td>
-                                        <%= user.created_at %>
-                                    </td>
-                                    <td>
-                                        <%= user.paste_count %>
-                                    </td>
-                                </tr>
+                    <% if (!users.length) { %>
+                        <div class="users-empty">No users found.</div>
+                    <% } else { %>
+                        <nav class="role-filters" aria-label="Filter users by role">
+                            <button class="role-filter" type="button" data-role-filter="all" aria-pressed="true">All roles · <%= users.length %></button>
+                            <% visibleRoleGroups.forEach(group => { %>
+                                <% const filterClass = String(group.role).toLowerCase().replace(/[^a-z0-9-]/g, ''); %>
+                                <button class="role-filter" type="button" data-role-filter="<%= filterClass %>" aria-pressed="false"><%= group.role %> · <%= group.users.length %></button>
+                            <% }) %>
+                        </nav>
+                    <% } %>
+                    <% visibleRoleGroups.forEach(group => { %>
+                        <% const groupClass = String(group.role).toLowerCase().replace(/[^a-z0-9-]/g, ''); %>
+                        <section class="role-section" data-role-section="<%= groupClass %>" aria-labelledby="role-heading-<%= groupClass %>">
+                            <div class="role-section-heading">
+                                <h2 id="role-heading-<%= groupClass %>"><span class="role-badge role-<%= groupClass %>"><%= group.role %></span></h2>
+                                <span class="role-section-count"><%= group.users.length %> <%= group.users.length === 1 ? 'user' : 'users' %></span>
+                            </div>
+                            <div class="user-list">
+                                <% group.users.forEach(user => { %>
+                                    <% const roleClass = String(user.role || 'Member').toLowerCase().replace(/[^a-z0-9-]/g, ''); %>
+                                    <a class="user-card" href="/profile?uid=<%= user.id %>">
+                                        <span class="user-card-name role-name role-<%= roleClass %>">
+                                            <span class="role-username"><%= user.username %></span>
+                                        </span>
+                                        <span class="user-card-count"><%= user.paste_count %> <%= Number(user.paste_count) === 1 ? 'paste' : 'pastes' %></span>
+                                        <span class="user-card-meta">ID <%= user.id %> · Joined <%= new Date(user.created_at).toLocaleDateString() %></span>
+                                    </a>
                                 <% }) %>
-                        </tbody>
-                    </table>
+                            </div>
+                        </section>
+                    <% }) %>
+                </main>
+                    <script>
+                        document.querySelectorAll('.role-filter').forEach((button) => {
+                            button.addEventListener('click', () => {
+                                const selectedRole = button.dataset.roleFilter;
+                                document.querySelectorAll('.role-filter').forEach((filterButton) => {
+                                    filterButton.setAttribute('aria-pressed', String(filterButton === button));
+                                });
+                                document.querySelectorAll('.role-section').forEach((section) => {
+                                    section.hidden = selectedRole !== 'all' && section.dataset.roleSection !== selectedRole;
+                                });
+                            });
+                        });
+                    </script>
                     <script src="/js/log.js"></script>
 </body>
 

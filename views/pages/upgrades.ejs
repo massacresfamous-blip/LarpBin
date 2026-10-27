@@ -2,30 +2,211 @@
 <html lang="en">
 
 <head>
+    <title>Upgrades | BreachBin</title>
     <%- include('../partials/header') %>
+    <style>
+        .upgrades-page {
+            width: min(1040px, calc(100% - 32px));
+            margin: 56px auto 72px;
+        }
+
+        .upgrades-heading {
+            margin-bottom: 34px;
+            text-align: center;
+        }
+
+        .upgrades-eyebrow {
+            margin: 0 0 10px;
+            color: #ff747d;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .upgrades-heading h1 {
+            margin: 0 0 10px;
+            color: #fff;
+            font-size: clamp(32px, 6vw, 48px);
+            letter-spacing: -0.04em;
+        }
+
+        .upgrades-heading p {
+            max-width: 560px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.7;
+        }
+
+        .upgrade-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
+            gap: 20px;
+        }
+
+        .upgrade-card {
+            position: relative;
+            display: flex;
+            min-height: 286px;
+            flex-direction: column;
+            padding: clamp(22px, 4vw, 30px);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 14px;
+            background: linear-gradient(145deg, rgba(32, 19, 22, 0.92), rgba(8, 8, 8, 0.82) 62%);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+            transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .upgrade-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 120, 130, 0.34);
+            box-shadow: 0 22px 56px rgba(0, 0, 0, 0.3);
+        }
+
+        .upgrade-card::before {
+            position: absolute;
+            top: -70px;
+            right: -50px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(217, 54, 67, 0.12);
+            content: "";
+            filter: blur(2px);
+            pointer-events: none;
+        }
+
+        .upgrade-card > * {
+            position: relative;
+        }
+
+        .upgrade-card h2 {
+            margin: 0 0 9px;
+            color: #fff;
+            font-size: 23px;
+        }
+
+        .upgrade-card p {
+            margin: 0 0 24px;
+            color: rgba(255, 255, 255, 0.68);
+            line-height: 1.7;
+        }
+
+        .upgrade-price {
+            display: flex;
+            align-items: baseline;
+            gap: 7px;
+            margin: auto 0 5px;
+            color: #fff;
+            font-size: 34px;
+            font-weight: 750;
+            letter-spacing: -0.04em;
+        }
+
+        .upgrade-price span {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+        .upgrade-status {
+            display: inline-block;
+            align-self: flex-start;
+            margin-top: 17px;
+            padding: 9px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 7px;
+            background: rgba(255, 255, 255, 0.055);
+            color: rgba(255, 255, 255, 0.66);
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .upgrade-notice {
+            max-width: 720px;
+            margin: 24px auto 0;
+            padding: 16px 18px;
+            border: 1px solid rgba(255, 180, 110, 0.2);
+            border-radius: 9px;
+            background: rgba(115, 66, 24, 0.13);
+            color: rgba(255, 232, 206, 0.82);
+            font-size: 13px;
+            line-height: 1.65;
+            text-align: center;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .upgrade-card {
+                transition: none;
+            }
+
+            .upgrade-card:hover {
+                transform: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Upgrades</h1>
-    <div class="upgrade-container">
-        <div class="upgrade-title wealthy-title">Wealthy Upgrade</div>
-        <div class="upgrade-description">
-            <p>Get exclusive features and perks with the Wealthy upgrade!</p>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">BREACH BIN</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/newpaste">New Paste</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/upgrades">Upgrades</a></li>
+                <li><a href="/hoa">HOA</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/changelog">Changelog</a></li>
+                        <li><a href="/donate">Donate</a></li>
+                        <li><a href="/prices">Prices</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <% if (typeof loggedIn !== 'undefined' && loggedIn && typeof userId !== 'undefined') { %>
+                    <li><a href="/profile?uid=<%= userId %>">Profile</a></li>
+                    <li><a href="/login/logout">Logout</a></li>
+                <% } else { %>
+                    <li><a href="/signup">Register</a></li>
+                    <li><a href="/login">Login</a></li>
+                <% } %>
+            </ul>
         </div>
-        <div class="purchase">
-            <button class="purchase-button">Purchase</button>
+    </nav>
+
+    <main class="upgrades-page">
+        <header class="upgrades-heading">
+            <p class="upgrades-eyebrow">BreachBin Store</p>
+            <h1>Upgrade your account</h1>
+            <p>Explore account upgrades and their one-time prices. Checkout is not available yet.</p>
+        </header>
+        <div class="upgrade-list">
+            <section class="upgrade-card">
+                <h2>Wealthy</h2>
+                <p>Unlock the Wealthy account upgrade and its associated profile perks.</p>
+                <div class="upgrade-price">$1.00 <span>one-time</span></div>
+                <span class="upgrade-status">Coming soon</span>
+            </section>
+            <section class="upgrade-card">
+                <h2>Colors</h2>
+                <p>Unlock additional color and customization options for your account.</p>
+                <div class="upgrade-price">$1.00 <span>one-time</span></div>
+                <span class="upgrade-status">Coming soon</span>
+            </section>
         </div>
-    </div>
-    <div class="upgrade-container">
-        <div class="upgrade-title colors-title">Colors Upgrade</div>
-        <div class="upgrade-description">
-            <p>Unlock new color themes and customization options.</p>
-        </div>
-        <div class="purchase">
-            <button class="purchase-button">Purchase</button>
-        </div>
-    </div>
-    <script src="/js/log.js"></script>
+        <p class="upgrade-notice">Each upgrade is listed at $1.00 USD. Stripe checkout has not been configured yet, so no payment can be made on this page.</p>
+    </main>
 </body>
 
 </html>

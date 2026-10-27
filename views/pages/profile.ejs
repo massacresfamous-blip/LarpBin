@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title><%= user.username %> | BreachBin</title>
     <%- include('../partials/header') %>
         <style>
             /* Base Styles */
@@ -62,9 +62,82 @@
                 border-top-right-radius: 8px;
             }
 
+            .profile-admin .profile-header {
+                border-top: 3px solid #ffffff;
+                box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+            }
+
+            .admin-profile-kicker {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                color: #ffffff;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            .profile-admin .profile-img img {
+                border-radius: 8px;
+                border-color: #ffffff;
+                box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+            }
+
+            .profile-admin .profile-user-name {
+                color: #ffffff;
+            }
+
+            .profile-admin .pastes-section,
+            .profile-admin .info-section {
+                border-top: 2px solid #ffffff;
+                border-radius: 0;
+                background-color: #080808;
+            }
+
+            #profile-track {
+                display: none;
+            }
+
             .profile-header .profile-info {
                 display: flex;
                 align-items: center;
+            }
+
+            .profile-custom-rules {
+                border-top: 1px solid #000;
+                margin-top: 12px;
+                padding-top: 10px;
+                white-space: pre-line;
+            }
+
+            .profile-image-form {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: end;
+                gap: 12px;
+                margin: 16px 20px;
+                padding: 14px;
+                background: #000;
+                border: 1px solid #333;
+            }
+
+            .profile-image-form label {
+                flex: 1 1 220px;
+                color: #fff;
+            }
+
+            .profile-session-notice {
+                margin: 16px 20px;
+                padding: 12px;
+                border: 1px solid #555;
+                color: #fff;
+            }
+
+            .profile-image-form input[type="file"] {
+                display: block;
+                width: 100%;
+                color: #fff;
             }
 
             .profile-img img {
@@ -116,6 +189,44 @@
             }
 
             /* Pastes Section */
+            .pastes-section h5 {
+                margin-top: 0;
+            }
+
+            .pinned-pastes {
+                margin-bottom: 22px;
+                padding: 0 0 14px;
+                border-bottom: 1px solid rgba(255, 85, 95, 0.38);
+                background: transparent;
+            }
+
+            .pinned-pastes-heading {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                margin: 0 0 8px;
+                color: rgba(255, 203, 138, 0.9);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .pinned-paste-item {
+                padding: 8px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                font-size: 15px;
+            }
+
+            .pinned-paste-item:last-child {
+                border-bottom: 0;
+            }
+
+            .pinned-paste-item a,
+            .paste-item a {
+                overflow-wrap: anywhere;
+            }
+
             .paste-item {
                 padding: 10px 0;
                 border-bottom: 1px solid #282828;
@@ -231,6 +342,533 @@
                 color: #ffffff;
                 padding: 5px 10px;
             }
+
+            .profile-page {
+                width: min(1120px, calc(100% - 32px));
+                max-width: 1120px;
+                min-height: 0;
+                margin: 24px auto 56px;
+                padding: 0;
+                overflow: hidden;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-top: 2px solid rgba(220, 57, 68, 0.86);
+                border-radius: 16px;
+                background: rgba(10, 10, 12, 0.74);
+                box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+                backdrop-filter: blur(18px);
+            }
+
+            .profile-header {
+                position: relative;
+                min-height: 294px;
+                padding: 54px clamp(22px, 6vw, 68px) 34px;
+                border-radius: 0;
+                background-image:
+                    linear-gradient(105deg, rgba(5, 5, 7, 0.94), rgba(5, 5, 7, 0.52) 62%, rgba(5, 5, 7, 0.28)),
+                    linear-gradient(0deg, rgba(5, 5, 7, 0.82), transparent 72%),
+                    url('<%= user.banner || "/Media/default_banner.jpg" %>');
+                background-position:
+                    center,
+                    center,
+                    calc(50% + var(--banner-offset-x, 0px)) calc(50% + var(--banner-offset-y, 0px));
+                background-size: cover;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .profile-info {
+                align-items: flex-end;
+                gap: 24px;
+            }
+
+            .profile-img {
+                flex: 0 0 auto;
+            }
+
+            .profile-img img {
+                display: block;
+                width: 128px;
+                height: 128px;
+                object-fit: cover;
+                border: 4px solid rgba(255, 255, 255, 0.9);
+                box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.08), 0 14px 36px rgba(0, 0, 0, 0.55);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .profile-img img:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1), 0 18px 42px rgba(0, 0, 0, 0.62);
+            }
+
+            .profile-header .profile-user-name {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 12px;
+                min-width: 0;
+                margin: 0;
+                color: #fff;
+                font-size: clamp(28px, 4.5vw, 46px);
+                line-height: 1.15;
+                overflow-wrap: anywhere;
+            }
+
+            .profile-user-name .role-badge {
+                font-size: 10px;
+                letter-spacing: 0.08em;
+            }
+
+            .profile-header .info-cont {
+                max-width: 720px;
+                padding: 18px 0 0 152px;
+                color: rgba(255, 255, 255, 0.82);
+                font-size: 14px;
+                line-height: 1.7;
+            }
+
+            .profile-header .info-cont p {
+                margin: 0;
+                white-space: pre-line;
+            }
+
+            .profile-summary-stats {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 22px 0 0 152px;
+            }
+
+            .profile-stat {
+                display: flex;
+                align-items: baseline;
+                gap: 7px;
+                min-width: 124px;
+                padding: 10px 13px;
+                border: 1px solid rgba(255, 255, 255, 0.17);
+                border-radius: 8px;
+                background: rgba(8, 8, 10, 0.48);
+                color: rgba(255, 255, 255, 0.58);
+                font-size: 12px;
+                text-decoration: none;
+                transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+            }
+
+            a.profile-stat:hover {
+                border-color: rgba(255, 255, 255, 0.36);
+                background: rgba(0, 0, 0, 0.5);
+                color: #fff;
+            }
+
+            .profile-stat-value {
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .profile-stat-label {
+                white-space: nowrap;
+            }
+
+            .profile-header hr {
+                display: none;
+            }
+
+            .profile-custom-rules {
+                margin: 14px 0 0 152px;
+                padding: 11px 14px;
+                border: 1px solid rgba(255, 255, 255, 0.17);
+                border-radius: 6px;
+                background: rgba(0, 0, 0, 0.28);
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            .profile-custom-rules strong {
+                display: block;
+                margin-bottom: 3px;
+                color: #fff;
+            }
+
+            .profile-custom-rules p {
+                margin: 0;
+            }
+
+            .profile-admin .profile-header {
+                border-top: 0;
+                box-shadow: none;
+            }
+
+            .admin-profile-kicker {
+                margin: -18px 0 24px;
+                color: rgba(255, 255, 255, 0.8);
+                letter-spacing: 0.12em;
+            }
+
+            .profile-admin .profile-img img {
+                border-radius: 50%;
+                border-color: #fff;
+                box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.12), 0 8px 28px rgba(0, 0, 0, 0.5);
+            }
+
+            .profile-split {
+                display: grid;
+                grid-template-columns: minmax(0, 1.85fr) minmax(280px, 0.8fr);
+                align-items: start;
+                gap: 18px;
+                padding: clamp(14px, 2.5vw, 26px);
+            }
+
+            .pastes-section,
+            .info-section,
+            .profile-comments {
+                min-width: 0;
+                padding: 22px;
+                border: 1px solid rgba(255, 255, 255, 0.095);
+                border-radius: 12px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+                transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .profile-admin .pastes-section,
+            .profile-admin .info-section {
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                border-radius: 9px;
+                background: rgba(0, 0, 0, 0.22);
+            }
+
+            .pastes-section h5,
+            .uinfo > h5,
+            .rcta > h5 {
+                margin: 0 0 14px;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .profile-section-heading,
+            .profile-comments > h2 {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin: 0 0 16px;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .profile-section-heading span,
+            .pinned-pastes-heading span {
+                color: rgba(255, 255, 255, 0.48);
+                font-size: 11px;
+                font-weight: 500;
+                letter-spacing: 0;
+            }
+
+            .regular-pastes-label {
+                margin: 0;
+                padding: 0 0 6px;
+                color: rgba(255, 255, 255, 0.48);
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            .pinned-pastes-heading {
+                justify-content: flex-start;
+            }
+
+            .pinned-pastes {
+                margin: 0 0 24px;
+                padding: 13px 15px;
+                border: 1px solid rgba(255, 85, 95, 0.2);
+                border-radius: 6px;
+                background: rgba(255, 85, 95, 0.035);
+                transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+            }
+
+            .pinned-pastes-heading {
+                margin-bottom: 8px;
+                color: #ff555f;
+            }
+
+            .pinned-paste-item,
+            .paste-item {
+                padding: 9px 3px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 3px;
+                font-size: 13px;
+                transition: transform 0.18s ease, background 0.18s ease;
+            }
+
+            .pinned-paste-item:last-child,
+            .paste-item:last-child {
+                border-bottom: 0;
+            }
+
+            .pinned-paste-item a,
+            .paste-item a {
+                color: #f3f3f3;
+                transition: color 0.18s ease;
+            }
+
+            .pinned-paste-item a {
+                color: #ff555f !important;
+                font-weight: 600;
+            }
+
+            .pinned-paste-item a::before {
+                content: "✦";
+                display: inline-block;
+                margin-right: 9px;
+                color: #ff555f;
+                font-size: 11px;
+            }
+
+            .pinned-paste-item a:hover,
+            .paste-item a:hover {
+                color: #ff7b83 !important;
+                text-decoration: none;
+            }
+
+            .uinfo {
+                font-size: 14px;
+            }
+
+            .uinfo-row {
+                align-items: center;
+                gap: 12px;
+                padding: 11px 0;
+                margin: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .uinfo-h {
+                color: rgba(255, 255, 255, 0.55);
+            }
+
+            .uinfo-i {
+                color: rgba(255, 255, 255, 0.9);
+                text-align: right;
+            }
+
+            .info-section > .profile-comments,
+            .info-section > .rcta {
+                margin-top: 22px;
+            }
+
+            .profile-comments {
+                padding: 16px;
+            }
+
+            .profile-comment {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                transition: background 0.18s ease, border-color 0.18s ease;
+            }
+
+            .profile-comment:last-child {
+                border-bottom: 0;
+            }
+
+            .profile-comment-header {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .profile-comment-date {
+                color: rgba(255, 255, 255, 0.48);
+                font-size: 10px;
+            }
+
+            .comment-text {
+                color: rgba(255, 255, 255, 0.78);
+                line-height: 1.55;
+                overflow-wrap: anywhere;
+            }
+
+            .profile-image-form {
+                align-items: center;
+                margin: 18px 22px 0;
+                padding: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 8px;
+                background: rgba(0, 0, 0, 0.24);
+                transition: border-color 0.18s ease, box-shadow 0.18s ease;
+            }
+
+            .profile-image-form label {
+                font-size: 12px;
+                line-height: 1.7;
+            }
+
+            .profile-image-form small {
+                flex: 1 1 100%;
+                color: rgba(255, 255, 255, 0.55);
+            }
+
+            .profile-image-form button {
+                padding: 10px 15px;
+                border-radius: 4px;
+            }
+
+            .profile-session-notice {
+                margin: 18px 22px 0;
+                border-color: rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+                background: rgba(0, 0, 0, 0.24);
+            }
+
+            .profile-empty-state {
+                padding: 28px 18px;
+                border: 1px dashed rgba(255, 255, 255, 0.16);
+                border-radius: 6px;
+                color: rgba(255, 255, 255, 0.62);
+                text-align: center;
+            }
+
+            .profile-empty-state p {
+                margin: 0 0 12px;
+            }
+
+            .profile-empty-state a {
+                display: inline-block;
+                padding: 8px 12px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+                color: #fff;
+                font-size: 11px;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+            }
+
+            .profile-empty-state a:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .profile-page a:focus-visible,
+            .profile-page button:focus-visible {
+                outline: 2px solid rgba(255, 255, 255, 0.8);
+                outline-offset: 3px;
+            }
+
+            @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+                .pastes-section:hover,
+                .info-section:hover,
+                .profile-comments:hover {
+                    transform: translateY(-3px);
+                    border-color: rgba(255, 85, 95, 0.24);
+                    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+                }
+
+                a.profile-stat:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+                }
+
+                .pinned-pastes:hover {
+                    transform: translateY(-2px);
+                    border-color: rgba(255, 85, 95, 0.4);
+                    background: rgba(255, 85, 95, 0.055);
+                }
+
+                .pinned-paste-item:hover,
+                .paste-item:hover {
+                    transform: translateX(4px);
+                    background: rgba(255, 85, 95, 0.055);
+                }
+
+                .profile-comment:hover {
+                    background: rgba(255, 255, 255, 0.025);
+                    border-color: rgba(255, 85, 95, 0.3);
+                }
+
+                .profile-image-form:hover {
+                    border-color: rgba(255, 85, 95, 0.32);
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+                }
+            }
+
+            @media (max-width: 760px) {
+                .profile-page {
+                    width: calc(100% - 20px);
+                    margin: 12px auto 32px;
+                    border-radius: 9px;
+                }
+
+                .profile-header {
+                    min-height: 0;
+                    padding: 28px 20px 22px;
+                }
+
+                .profile-info {
+                    align-items: center;
+                    gap: 15px;
+                }
+
+                .profile-img img {
+                    width: 76px;
+                    height: 76px;
+                }
+
+                .profile-header .info-cont {
+                    padding: 16px 0 0;
+                }
+
+                .profile-summary-stats {
+                    padding: 16px 0 0;
+                }
+
+                .profile-stat {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    justify-content: center;
+                }
+
+                .profile-custom-rules {
+                    margin-left: 0;
+                }
+
+                .profile-split {
+                    grid-template-columns: minmax(0, 1fr);
+                    padding: 12px;
+                }
+
+                .pastes-section,
+                .info-section {
+                    padding: 17px;
+                }
+
+                .profile-image-form {
+                    margin: 14px 12px 0;
+                }
+
+                .profile-session-notice {
+                    margin: 14px 12px 0;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .profile-img img,
+                .paste-item a,
+                .pinned-paste-item a,
+                .profile-stat,
+                .pastes-section,
+                .info-section,
+                .profile-comments,
+                .pinned-pastes,
+                .pinned-paste-item,
+                .paste-item,
+                .profile-comment,
+                .profile-image-form {
+                    transition: none;
+                }
+            }
         </style>
 </head>
 
@@ -246,16 +884,16 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/newpaste">New Paste</a></li>
                     <li><a href="/users">Users</a></li>
-                    <li><a href="/upgrade">Upgrades</a></li>
-                    <li><a href="/wallofclowns">Wall of Clowns</a></li>
+                    <li><a href="/upgrades">Upgrades</a></li>
+                    <li><a href="/hoa">HOA</a></li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="/faq">FAQ</a></li>
-                            <li><a href="/viewpaste?id=55038">ToS</a></li>
-                            <li><a href="/viewpaste?id=29175">Changelog</a></li>
+                            <li><a href="/terms">Terms of Service</a></li>
+                            <li><a href="/changelog">Changelog</a></li>
                             <li><a href="/donate">Donate</a></li>
                             <li><a href="/prices">Prices</a></li>
                             <li><a href="/contact">Contact</a></li>
@@ -263,6 +901,7 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/settings">Settings</a></li>
                     <li><a href="/profile?uid=<%= user.id %>">Profile</a></li>
                     <li><a href="/login/logout">Logout</a></li>
                 </ul>
@@ -279,19 +918,19 @@
                         <li><a href="/">Home</a></li>
                         <li><a href="/newpaste">New Paste</a></li>
                         <li><a href="/users">Users</a></li>
-                        <li><a href="/upgrade">Upgrades</a></li>
-                        <li><a href="/wallofclowns">Wall of Clowns</a></li>
+                        <li><a href="/upgrades">Upgrades</a></li>
+                        <li><a href="/hoa">HOA</a></li>
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/faq.php">FAQ</a></li>
-                                <li><a href="/viewpaste.php?id=55038">ToS</a></li>
-                                <li><a href="/viewpaste.php?id=29175">Changelog</a></li>
-                                <li><a href="/donate.php">Donate</a></li>
-                                <li><a href="/prices.php">Prices</a></li>
-                                <li><a href="/contact.php">Contact</a></li>
+                                <li><a href="/faq">FAQ</a></li>
+                                <li><a href="/terms">Terms of Service</a></li>
+                                <li><a href="/changelog">Changelog</a></li>
+                                <li><a href="/donate">Donate</a></li>
+                                <li><a href="/prices">Prices</a></li>
+                                <li><a href="/contact">Contact</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -303,47 +942,118 @@
             </nav>
             <% } %>
 
-                <div class="container">
-                    <div class="profile-cont">
+                <main class="profile-page">
+                    <% const profileMusicEnabled = typeof locals.canUseProfileMusic === 'boolean'
+                        ? locals.canUseProfileMusic
+                        : Number(user.admin) === 1 || String(user.role || 'Member').trim().toLowerCase() !== 'member'; %>
+                    <% const roleName = user.role || 'Member'; %>
+                    <% const roleClass = String(roleName).toLowerCase().replace(/[^a-z0-9-]/g, ''); %>
+                    <% const joinedDate = new Date(user.created_at); %>
+                    <div class="profile-cont <%= isAdminProfile ? 'profile-admin' : '' %>">
                         <div class="profile-header">
+                            <% if (isAdminProfile) { %>
+                                <div class="admin-profile-kicker">
+                                    <span>Administrator</span>
+                                </div>
+                            <% } %>
                             <div class="profile-info">
                                 <div class="profile-img">
                                     <img src="<%= user.profile_picture || '/Media/default_profile.jpg' %>"
-                                        alt="Profile Picture">
+                                        alt="<%= user.username %>'s profile picture">
                                 </div>
-                                <h5>
-                                    <%= user.username %>
-                                        <% if (user.role) { %>
-                                            <span style="color: #780A48;">[<%= user.role %>]</span>
-                                            <% } %>
-                                </h5>
+                                <h1 class="profile-user-name role-name role-<%= roleClass %>">
+                                    <span class="role-username"><%= user.username %></span>
+                                    <span class="role-badge role-<%= roleClass %>"><%= roleName %></span>
+                                </h1>
                             </div>
                             <div class="info-cont">
-                                <p>
-                                    <%= user.bio || '' %>
-                                </p>
+                                <p><%= user.bio || 'No bio added yet.' %></p>
                             </div>
+                            <div class="profile-summary-stats" aria-label="Profile summary">
+                                <a class="profile-stat" href="#profile-pastes">
+                                    <span class="profile-stat-value"><%= pastes.length %></span>
+                                    <span class="profile-stat-label"><%= pastes.length === 1 ? 'paste' : 'pastes' %></span>
+                                </a>
+                                <a class="profile-stat" href="#profile-comments">
+                                    <span class="profile-stat-value"><%= comments.length %></span>
+                                    <span class="profile-stat-label"><%= comments.length === 1 ? 'comment' : 'comments' %></span>
+                                </a>
+                                <div class="profile-stat">
+                                    <span class="profile-stat-value"><%= joinedDate.toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) %></span>
+                                    <span class="profile-stat-label">joined</span>
+                                </div>
+                            </div>
+                            <% if (profileMusicEnabled && user.profile_music) { %>
+                                <audio id="profile-track" autoplay loop preload="auto" src="<%= user.profile_music %>"></audio>
+                                <script>
+                                    const profileTrack = document.getElementById('profile-track');
+                                    const startProfileTrack = () => profileTrack.play().catch(() => {});
+                                    startProfileTrack();
+                                    document.addEventListener('pointerdown', startProfileTrack, { once: true });
+                                    document.addEventListener('keydown', startProfileTrack, { once: true });
+                                </script>
+                            <% } %>
+                            <% if (user.custom_rules) { %>
+                                <div class="profile-custom-rules">
+                                    <strong>Custom Rules</strong>
+                                    <p><%= user.custom_rules %></p>
+                                </div>
+                            <% } %>
                             <hr>
                         </div>
+                        <% if (sessionExpired) { %>
+                            <p class="profile-session-notice">
+                                Your sign-in expired. <a href="/login">Sign in again</a> to change your profile picture or banner.
+                            </p>
+                        <% } %>
+                        <% if (isOwner) { %>
+                            <form class="profile-image-form" action="/profile/<%= user.id %>/customize" method="post" enctype="multipart/form-data">
+                                <label>Profile picture <input type="file" name="profile_picture" accept="<%= canUseAnimatedImages ? 'image/png,image/jpeg,image/gif,image/webp' : 'image/png,image/jpeg,image/webp' %>"></label>
+                                <label>Banner <input type="file" name="banner" accept="<%= canUseAnimatedImages ? 'image/png,image/jpeg,image/gif,image/webp' : 'image/png,image/jpeg,image/webp' %>"></label>
+                                <% if (profileMusicEnabled) { %>
+                                    <label>Profile music <input type="file" name="profile_music" accept="audio/mpeg,audio/ogg,audio/wav,audio/mp4"></label>
+                                <% } %>
+                                <small>
+                                    <%= canUseAnimatedImages ? 'Animated GIF, APNG, and WebP images are allowed.' : 'Animated images require a role other than Member.' %>
+                                    Images must be under 8 MB.
+                                    <% if (profileMusicEnabled) { %>Music must be under 12 MB (MP3, OGG, WAV, or M4A).<% } %>
+                                </small>
+                                <button type="submit">Save images</button>
+                            </form>
+                        <% } %>
                         <div class="profile-split">
-                            <div class="pastes-section">
-                                <div class="col-md-9" style="margin: 0; padding: 0;">
-                                    <% if (pastes.length> 0) { %>
-                                        <div id="pastes-container"></div> <!-- Dynamic content here -->
-                                        <!-- Pagination Controls -->
+                            <section class="pastes-section" id="profile-pastes" aria-labelledby="profile-pastes-heading">
+                                <% const pinnedPastes = pastes.filter(paste => Number(paste.pinned) === 1); %>
+                                <% const regularPastes = pastes.filter(paste => Number(paste.pinned) !== 1); %>
+                                <h2 class="profile-section-heading" id="profile-pastes-heading">Pastes <span><%= pastes.length %></span></h2>
+                                <% if (pastes.length > 0) { %>
+                                    <% if (pinnedPastes.length > 0) { %>
+                                        <section class="pinned-pastes" aria-labelledby="pinned-pastes-heading">
+                                            <h2 class="pinned-pastes-heading" id="pinned-pastes-heading">Pinned pastes <span><%= pinnedPastes.length %></span></h2>
+                                            <% pinnedPastes.forEach(paste => { %>
+                                                <div class="pinned-paste-item">
+                                                    <a href="/paste?id=<%= paste.id %>" style="color: <%= paste.text_color %>"><%= paste.title %></a>
+                                                </div>
+                                            <% }) %>
+                                        </section>
+                                    <% } %>
+                                    <% if (regularPastes.length > 0) { %>
+                                        <h3 class="regular-pastes-label">Recent pastes</h3>
+                                        <div id="pastes-container"></div>
                                         <div id="pagination-container" class="pagination" style="display: none;">
                                             <button id="prevPage" class="page-btn" disabled>&#171;</button>
                                             <span id="pageNumbers"></span>
                                             <button id="nextPage" class="page-btn">&#187;</button>
                                         </div>
-                                        <% } else { %>
-                                            <h5 class="gray" style="font-size: 15px;">
-                                                <%= user.username %> has no pastes.
-                                            </h5>
-                                            <% } %>
-                                </div>
-                            </div>
-                            <div class="info-section">
+                                    <% } %>
+                                <% } else { %>
+                                    <div class="profile-empty-state">
+                                        <p><%= user.username %> has not shared any pastes yet.</p>
+                                        <% if (isOwner) { %><a href="/newpaste">Create your first paste</a><% } %>
+                                    </div>
+                                <% } %>
+                            </section>
+                            <aside class="info-section">
                                 <div class="uinfo">
                                     <h5><b>Information</b></h5>
                                     <div class="uinfo-row">
@@ -353,29 +1063,15 @@
                                         </div>
                                     </div>
                                     <div class="uinfo-row">
-                                        <div class="uinfo-h">Joined</div>
-                                        <div class="uinfo-i">
-                                            <%= new Date(user.created_at).toLocaleDateString() %>
-                                        </div>
-                                    </div>
-                                    <a href="/user/<%= user.username %>/pastes">
-                                        <div class="uinfo-row">
-                                            <div class="uinfo-h">Pastes</div>
-                                            <div class="uinfo-i">
-                                                <%= pastes.length %>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <div class="uinfo-row">
-                                        <div class="uinfo-h">Comments</div>
-                                        <div class="uinfo-i">
-                                            <%= comments.length || 0 %>
-                                        </div>
+                                        <div class="uinfo-h">Role</div>
+                                        <div class="uinfo-i"><span class="role-badge role-<%= roleClass %>"><%= roleName %></span></div>
                                     </div>
                                 </div>
-                                <div class="rcta profile-comments">
-                                    <div class="comments-section">
-                                        <% comments.slice(0, 5).forEach(comment=> { %> <!-- Limit to 5 comments -->
+                                <section class="rcta profile-comments" id="profile-comments" aria-labelledby="profile-comments-heading">
+                                        <h2 id="profile-comments-heading">Recent comments</h2>
+                                        <div class="comments-section">
+                                            <% if (comments.length > 0) { %>
+                                                <% comments.slice(0, 5).forEach(comment=> { %>
                                             <div class="profile-comment"
                                                 title="<%= new Date(comment.created_at).toLocaleString() %>">
                                                 <div class="profile-comment-header">
@@ -401,19 +1097,65 @@
                                                 <hr>
                                             </div>
                                             <% }); %>
-                                    </div>
-                                </div>
-                                <div class="rcta">
-                                    <h5><b>Recent Activity</b></h5>
-                                    <p>No recent activity</p>
-                                </div>
-                            </div>
+                                            <% } else { %>
+                                                <p class="comment-text">No comments yet.</p>
+                                            <% } %>
+                                        </div>
+                                </section>
+                            </aside>
                         </div>
                     </div>
-                </div>
+                </main>
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
-                        const pastes = <%- JSON.stringify(pastes) %>; 
+                        const profileBanner = document.querySelector('.profile-header');
+                        const canTrackPointer = window.matchMedia(
+                            '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
+                        );
+
+                        if (profileBanner && canTrackPointer.matches) {
+                            let targetX = 0;
+                            let targetY = 0;
+                            let currentX = 0;
+                            let currentY = 0;
+                            let animationFrame = null;
+
+                            const animateBanner = () => {
+                                currentX += (targetX - currentX) * 0.14;
+                                currentY += (targetY - currentY) * 0.14;
+                                profileBanner.style.setProperty('--banner-offset-x', `${currentX.toFixed(2)}px`);
+                                profileBanner.style.setProperty('--banner-offset-y', `${currentY.toFixed(2)}px`);
+
+                                if (Math.abs(targetX - currentX) > 0.1 || Math.abs(targetY - currentY) > 0.1) {
+                                    animationFrame = requestAnimationFrame(animateBanner);
+                                } else {
+                                    currentX = targetX;
+                                    currentY = targetY;
+                                    profileBanner.style.setProperty('--banner-offset-x', `${currentX}px`);
+                                    profileBanner.style.setProperty('--banner-offset-y', `${currentY}px`);
+                                    animationFrame = null;
+                                }
+                            };
+
+                            const setTarget = (x, y) => {
+                                targetX = x;
+                                targetY = y;
+                                if (animationFrame === null) {
+                                    animationFrame = requestAnimationFrame(animateBanner);
+                                }
+                            };
+
+                            profileBanner.addEventListener('pointermove', (event) => {
+                                const bounds = profileBanner.getBoundingClientRect();
+                                const relativeX = (event.clientX - bounds.left) / bounds.width * 2 - 1;
+                                const relativeY = (event.clientY - bounds.top) / bounds.height * 2 - 1;
+                                setTarget(relativeX * 12, relativeY * 12);
+                            });
+
+                            profileBanner.addEventListener('pointerleave', () => setTarget(0, 0));
+                        }
+
+                        const pastes = <%- JSON.stringify(pastes.filter(paste => Number(paste.pinned) !== 1).map(({ id, title, text_color }) => ({ id, title, text_color }))).replace(/</g, '\\u003c') %>;
                         const itemsPerPage = 10;
                         let currentPage = 1;
 
@@ -428,23 +1170,28 @@
                             pagePastes.forEach(paste => {
                                 const pasteElement = document.createElement('div');
                                 pasteElement.classList.add('paste-item');
-                                pasteElement.innerHTML = `<a style="color: ${paste.text_color} !important;" href="/paste?id=${paste.id}">${paste.title}</a>`;
+                                const pasteLink = document.createElement('a');
+                                pasteLink.href = `/paste?id=${encodeURIComponent(paste.id)}`;
+                                pasteLink.textContent = paste.title;
+                                pasteLink.style.color = paste.text_color;
+                                pasteElement.appendChild(pasteLink);
                                 container.appendChild(pasteElement);
                             });
 
-                            document.getElementById('pageNumbers').innerText = `Page ${currentPage} of ${Math.ceil(pastes.length / itemsPerPage)}`;
+                            const totalPages = Math.ceil(pastes.length / itemsPerPage);
+                            document.getElementById('pageNumbers').innerText = `Page ${currentPage} of ${totalPages}`;
                             document.getElementById('prevPage').disabled = currentPage === 1;
-                            document.getElementById('nextPage').disabled = currentPage === Math.ceil(pastes.length / itemsPerPage);
+                            document.getElementById('nextPage').disabled = currentPage === totalPages;
                         }
 
-                        document.getElementById('prevPage').addEventListener('click', () => {
+                        document.getElementById('prevPage')?.addEventListener('click', () => {
                             if (currentPage > 1) {
                                 currentPage--;
                                 renderPastes();
                             }
                         });
 
-                        document.getElementById('nextPage').addEventListener('click', () => {
+                        document.getElementById('nextPage')?.addEventListener('click', () => {
                             if (currentPage < Math.ceil(pastes.length / itemsPerPage)) {
                                 currentPage++;
                                 renderPastes();

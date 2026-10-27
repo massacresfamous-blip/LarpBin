@@ -1,17 +1,122 @@
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BreachBin</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://www.hCaptcha.com/1/api.js" async="" defer=""></script>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/breachbin.css">
+    <% if (userBackground) { %>
+        <style>
+            body::before {
+                background-image: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.58)), url("<%= userBackground %>");
+            }
+        </style>
+    <% } %>
+    <% if (typeof adminImpersonating !== 'undefined' && adminImpersonating) { %>
+        <style>
+            .admin-impersonation-banner {
+                align-items: center;
+                background: #7f1d1d;
+                color: #fff;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                justify-content: center;
+                padding: 10px 16px;
+                position: sticky;
+                top: 0;
+                z-index: 10000;
+            }
+
+            .admin-impersonation-banner form {
+                margin: 0;
+            }
+
+            .admin-impersonation-banner button {
+                background: #fff;
+                border: 0;
+                border-radius: 6px;
+                color: #7f1d1d;
+                cursor: pointer;
+                font-weight: 700;
+                padding: 8px 12px;
+            }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const banner = document.createElement('div');
+                banner.className = 'admin-impersonation-banner';
+                banner.innerHTML = '<span>You are viewing the site as another account.</span><form method="post" action="/admin/return-to-admin"><button type="submit">Return to admin</button></form>';
+                document.body.prepend(banner);
+            });
+        </script>
+    <% } %>
     <link rel="icon" href="/Media/favicon.ico" type="image/x-icon">
     <link rel="icon" type="image/png" sizes="16x16" href="/Media/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/Media/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/Media/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/Media/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="/Media/android-chrome-512x512.png">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.navbar-brand').forEach((brand) => {
+                fetch('/Media/toplogo.txt')
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`Unable to load navbar logo: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then((logoText) => {
+                        const art = document.createElement('pre');
+                        art.className = 'navbar-brand-art';
+                        art.setAttribute('aria-hidden', 'true');
+                        art.textContent = logoText.trimEnd();
+
+                        brand.setAttribute('aria-label', 'BreachBin home');
+                        brand.replaceChildren(art);
+                    })
+                    .catch((error) => console.error(error));
+            });
+
+            if (document.getElementById('logo-only-toggle')) {
+                return;
+            }
+
+            const toggle = document.createElement('button');
+            toggle.id = 'logo-only-toggle';
+            toggle.type = 'button';
+            toggle.textContent = '◉';
+            toggle.setAttribute('aria-label', 'Show only the logo and background');
+            toggle.setAttribute('aria-pressed', 'false');
+            toggle.title = 'Toggle logo-only view';
+            toggle.addEventListener('click', () => {
+                const enabled = document.body.classList.toggle('logo-only-mode');
+                toggle.setAttribute('aria-pressed', String(enabled));
+                toggle.setAttribute('aria-label', enabled
+                    ? 'Show the full page'
+                    : 'Show only the logo and background');
+
+                if (enabled && !document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch((error) => {
+                        console.error('Unable to enter fullscreen:', error);
+                    });
+                } else if (!enabled && document.fullscreenElement) {
+                    document.exitFullscreen().catch((error) => {
+                        console.error('Unable to exit fullscreen:', error);
+                    });
+                }
+            });
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement && document.body.classList.contains('logo-only-mode')) {
+                    document.body.classList.remove('logo-only-mode');
+                    toggle.setAttribute('aria-pressed', 'false');
+                    toggle.setAttribute('aria-label', 'Show only the logo and background');
+                }
+            });
+            document.body.append(toggle);
+        });
+    </script>

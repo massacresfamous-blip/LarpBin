@@ -6,8 +6,6 @@
 </head>
 
 <body>
-    <%- include('../partials/header') %>
-
         <% if (loggedIn==true) { %>
             <!-- Logged in -->
             <nav class="navbar navbar-inverse">
@@ -19,21 +17,24 @@
                         <li><a href="/">Home</a></li>
                         <li><a href="/newpaste">New Paste</a></li>
                         <li><a href="/users">Users</a></li>
-                        <li><a href="/">Upgrades</a></li>
-                        <li><a href="/">Wall of Clowns</a></li>
+                        <li><a href="/upgrades">Upgrades</a></li>
+                        <li><a href="/hoa">HOA</a></li>
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="/">FAQ</a></li>
-                                <li><a href="/">Donate</a></li>
-                                <li><a href="/">Prices</a></li>
-                                <li><a href="/">Contact</a></li>
+                                <li><a href="/faq">FAQ</a></li>
+                                <li><a href="/terms">Terms of Service</a></li>
+                                <li><a href="/changelog">Changelog</a></li>
+                                <li><a href="/donate">Donate</a></li>
+                                <li><a href="/prices">Prices</a></li>
+                                <li><a href="/contact">Contact</a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/settings">Settings</a></li>
                         <li><a href="/profile?uid=<%= user.id %>">Profile</a></li>
                         <li><a href="/login/logout">Logout</a></li>
                     </ul>
@@ -50,19 +51,19 @@
                             <li><a href="/">Home</a></li>
                             <li><a href="/newpaste">New Paste</a></li>
                             <li><a href="/users">Users</a></li>
-                            <li><a href="/upgrade">Upgrades</a></li>
-                            <li><a href="/wallofclowns">Wall of Clowns</a></li>
+                            <li><a href="/upgrades">Upgrades</a></li>
+                            <li><a href="/hoa">HOA</a></li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="/">About
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="/faq.php">FAQ</a></li>
-                                    <li><a href="/viewpaste.php?id=55038">ToS</a></li>
-                                    <li><a href="/viewpaste.php?id=29175">Changelog</a></li>
-                                    <li><a href="/donate.php">Donate</a></li>
-                                    <li><a href="/prices.php">Prices</a></li>
-                                    <li><a href="/contact.php">Contact</a></li>
+                                    <li><a href="/faq">FAQ</a></li>
+                                    <li><a href="/terms">Terms of Service</a></li>
+                                    <li><a href="/changelog">Changelog</a></li>
+                                    <li><a href="/donate">Donate</a></li>
+                                    <li><a href="/prices">Prices</a></li>
+                                    <li><a href="/contact">Contact</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -103,32 +104,36 @@
                         </div>
                     </div>
 
-                    <div class="container">
-                        <table class="table table-hover">
-                            <thead class="tb-highlight">
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Made by</th>
-                                    <th>File Size</th>
-                                    <th>Comments</th>
-                                    <th>Views</th>
-                                    <th>Date created</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Pinned Pastes Section -->
-                                <% pastes.filter(p=> p.pinned).forEach(paste => { %>
-                                    <tr class="paste-item <%= paste.post_type %>">
+                    <div class="container paste-feed">
+                        <% const pinnedPastes = pastes.filter(paste => Number(paste.pinned) === 1); %>
+                        <% const recentPastes = pastes.filter(paste => Number(paste.pinned) !== 1); %>
+                        <% if (pinnedPastes.length > 0) { %>
+                            <section class="pinned-pastes-section" aria-labelledby="pinned-pastes-title">
+                                <h2 class="pinned-pastes-title" id="pinned-pastes-title">★ Pinned pastes</h2>
+                                <table class="table table-hover">
+                                    <thead class="tb-highlight">
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Made by</th>
+                                            <th>File Size</th>
+                                            <th>Comments</th>
+                                            <th>Views</th>
+                                            <th>Date created</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% pinnedPastes.forEach(paste => { %>
+                                    <tr class="paste-item pinned-paste-row <%= paste.post_type %>">
                                         <td>
                                             <a class="paste-link" href="/paste?id=<%= paste.id %>" target="_blank"
                                                 title="<%= paste.title %>"
-                                                style="color: <%= paste.text_color %> !important; font-weight: bold;">
+                                            style="color: <%= paste.text_color %>; font-weight: bold;">
                                                 <%= paste.title %>
                                             </a>
                                         </td>
                                         <td><a class="paste-link <%= paste.post_type %>"
                                                 href="/profile?uid=<%= paste.user_id %>" target="_blank"
-                                                style="color: <%= paste.text_color %> !important;">
+                                                style="color: <%= paste.text_color %>;">
                                                 <%= paste.user_name %>
                                             </a></td>
                                         <td style="color: <%= paste.text_color %> !important;">
@@ -144,18 +149,35 @@
                                             <%= paste.created_at %>
                                         </td>
                                     </tr>
-                                    <% }) %>
-                                        <!-- Regular Pastes Section -->
-                                        <% pastes.filter(p=> !p.pinned).forEach(paste => { %>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </section>
+                        <% } %>
+                        <section class="recent-pastes-section" aria-labelledby="recent-pastes-title">
+                            <h2 class="recent-pastes-title" id="recent-pastes-title">Recent pastes</h2>
+                            <table class="table table-hover">
+                                <thead class="tb-highlight">
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Made by</th>
+                                        <th>File Size</th>
+                                        <th>Comments</th>
+                                        <th>Views</th>
+                                        <th>Date created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% recentPastes.forEach(paste => { %>
                                             <tr class="paste-item <%= paste.post_type %>">
                                                 <td><a class="paste-link" href="/paste?id=<%= paste.id %>"
                                                         target="_blank" title="<%= paste.title %>"
-                                                        style="color: <%= paste.text_color %> !important;">
+                                                        style="color: <%= paste.text_color %>;">
                                                         <%= paste.title %>
                                                     </a></td>
                                                 <td><a class="paste-link <%= paste.post_type %>"
                                                         href="/profile?uid=<%= paste.user_id %>" target="_blank"
-                                                        style="color: <%= paste.text_color %> !important;">
+                                                        style="color: <%= paste.text_color %>;">
                                                         <%= paste.user_name %>
                                                     </a></td>
                                                 <td style="color: <%= paste.text_color %> !important;">
@@ -171,9 +193,10 @@
                                                     <%= paste.created_at %>
                                                 </td>
                                             </tr>
-                                            <% }) %>
-                            </tbody>
-                        </table>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </section>
 
                         <% if (totalPages> 1) { %>
                             <div class="pagination">

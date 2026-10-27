@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= page.title %> | BreachBin</title>
+    <%- include('../partials/header') %>
+    <style>
+        .info-page {
+            width: min(760px, calc(100% - 32px));
+            margin: 48px auto;
+            padding: clamp(22px, 5vw, 40px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            background: rgba(8, 8, 8, 0.68);
+            backdrop-filter: blur(12px);
+        }
+
+        .info-page h1 {
+            margin: 0 0 10px;
+            color: #fff;
+            font-size: clamp(26px, 5vw, 36px);
+        }
+
+        .info-description {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.7;
+        }
+
+        .faq-list {
+            margin-top: 28px;
+        }
+
+        .faq-item {
+            padding: 18px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.11);
+        }
+
+        .faq-item h2 {
+            margin: 0 0 7px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .faq-item p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.68);
+            line-height: 1.7;
+        }
+
+        .faq-item a,
+        .info-shop-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #ff9299;
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none;
+        }
+
+        .faq-item a:hover,
+        .info-shop-link:hover {
+            color: #ffc0c4;
+            text-decoration: underline;
+        }
+
+        .info-contact-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.07);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">BREACH BIN</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/newpaste">New Paste</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/upgrades">Upgrades</a></li>
+                <li><a href="/hoa">HOA</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/changelog">Changelog</a></li>
+                        <li><a href="/donate">Donate</a></li>
+                        <li><a href="/prices">Prices</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/signup">Register</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="info-page">
+        <h1><%= page.title %></h1>
+        <p class="info-description"><%= page.description %></p>
+        <% if (page.sections) { %>
+            <div class="faq-list">
+                <% page.sections.forEach(section => { %>
+                    <section class="faq-item">
+                        <h2><%= section.question %></h2>
+                        <p><%= section.answer %></p>
+                        <% if (section.link) { %>
+                            <a href="<%= section.link.href %>"><%= section.link.label %></a>
+                        <% } %>
+                    </section>
+                <% }) %>
+            </div>
+        <% } %>
+        <% if (page.shopLink) { %>
+            <a class="info-shop-link" href="/buy">Browse upgrades</a>
+        <% } %>
+        <% if (page.contact) { %>
+            <a class="info-contact-link" href="https://t.me/skidbinsite" target="_blank" rel="noopener noreferrer">Open BreachBin Telegram</a>
+        <% } %>
+    </main>
+</body>
+
+</html>

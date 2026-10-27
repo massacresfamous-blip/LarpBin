@@ -11,30 +11,38 @@ const logoText = fs.readFileSync(path.resolve(__dirname, '..', 'public', 'Media'
 
 // Users route with login check and user info
 router.get('/', (req, res) => {
-    // Check if user is logged in
     const loggedIn = req.cookies.LoggedIn === 'true';
-    if (!loggedIn) {
-        // If not logged in, redirect to the login page
-    }
-    
-    const username = req.cookies.username; // Assuming username is stored in the cookie
-    // Retrieve user info from the database using username
-    db.get('SELECT * FROM users WHERE username = ?', [username], (err, user) => {
-        if (err) {
-            throw err;
-        }
-        const sql = `
-            SELECT users.id, users.username, users.created_at, COUNT(pastes.id) AS paste_count
-            FROM users
-            LEFT JOIN pastes ON users.username = pastes.user_name
-            GROUP BY users.id
-        `;
+    const username = req.cookies.username;
+    const sql = `
+        SELECT users.id, users.username, users.created_at,
+            COALESCE(users.role, 'Member') AS role,
+            COUNT(pastes.id) AS paste_count
+        FROM users
+        LEFT JOIN pastes ON users.username = pastes.user_name
+        GROUP BY users.id
+        ORDER BY users.role, users.username COLLATE NOCASE
+    `;
+
+    const renderUsers = (user) => {
         db.all(sql, [], (err, rows) => {
             if (err) {
-                throw err;
+                console.error('Error fetching users:', err);
+                return res.status(500).send('Database error');
             }
-            res.render('pages/users', { users: rows, loggedIn: loggedIn, user: user, logoText });
+            res.render('pages/users', { users: rows, loggedIn, user, logoText });
         });
+    };
+
+    if (!loggedIn || !username) {
+        return renderUsers(null);
+    }
+
+    db.get('SELECT * FROM users WHERE username = ?', [username], (err, user) => {
+        if (err) {
+            console.error('Error fetching current user:', err);
+            return res.status(500).send('Database error');
+        }
+        renderUsers(user || null);
     });
 });
 

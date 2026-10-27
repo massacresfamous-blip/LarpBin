@@ -11,27 +11,25 @@ const db = new sqlite3.Database(dbPath);
 
 // Login route with login check
 router.get('/', (req, res) => {
-    const loggedIn = req.cookies.LoggedIn === 'true';
+    const loggedIn = Boolean(req.session && req.session.userId);
     
     if (loggedIn) {
-        const username = req.cookies.username;
-        
-        db.get('SELECT * FROM users WHERE username = ?', [username], (err, user) => {
+        db.get('SELECT id FROM users WHERE id = ?', [req.session.userId], (err, user) => {
             if (err) {
                 console.error("Database error:", err);
                 return res.status(500).send("Database error");
             }
 
             if (!user) {
-                res.clearCookie('LoggedIn');
-                res.clearCookie('username');
-                res.clearCookie('Admin');
+                req.session.destroy(() => {});
+                ['LoggedIn', 'username', 'Admin', 'user_id'].forEach((cookieName) => res.clearCookie(cookieName));
                 return res.redirect('/login');
             }
 
             return res.redirect('/');
         });
     } else {
+        ['LoggedIn', 'username', 'Admin', 'user_id'].forEach((cookieName) => res.clearCookie(cookieName));
         res.render('pages/login');
     }
 });
@@ -43,7 +41,7 @@ router.get('/logout', (req, res) => {
     res.clearCookie('Admin');
     res.clearCookie('connect.sid');
     res.clearCookie('user_id');
-    res.redirect('/');
+    req.session.destroy(() => res.redirect('/'));
 });
 
 // Login authentication
@@ -62,18 +60,27 @@ router.post('/', (req, res) => {
 
         const match = await bcrypt.compare(password, user.password);
         if (match) {
-            res.cookie('LoggedIn', true, { httpOnly: true });
-            res.cookie('username', username, { httpOnly: true });
-            res.cookie('user_id', user.id, { httpOnly: true });
+            req.session.regenerate((sessionError) => {
+                if (sessionError) {
+                    console.error('Session creation error:', sessionError);
+                    return res.status(500).send('Unable to start a session');
+                }
 
-            // Set Admin cookie if user is an admin
-            if (user.admin === 1) {
-                res.cookie('Admin', true, { httpOnly: true });
-            } else {
-                res.cookie('Admin', false, { httpOnly: true });
-            }
+                req.session.userId = user.id;
+                req.session.userBackground = user.background_image || null;
+                req.session.save((saveError) => {
+                    if (saveError) {
+                        console.error('Session save error:', saveError);
+                        return res.status(500).send('Unable to save session');
+                    }
 
-            res.redirect('/');
+                    res.cookie('LoggedIn', true, { httpOnly: true });
+                    res.cookie('username', username, { httpOnly: true });
+                    res.cookie('user_id', user.id, { httpOnly: true });
+                    res.cookie('Admin', user.admin === 1, { httpOnly: true });
+                    res.redirect('/');
+                });
+            });
         } else {
             res.status(400).send("Invalid username or password");
         }

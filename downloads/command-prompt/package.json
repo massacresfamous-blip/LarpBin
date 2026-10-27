@@ -1,0 +1,12 @@
+{
+  "name": "breachbin-command-prompt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Windows terminal client for BreachBin",
+  "scripts": {
+    "start": "node cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

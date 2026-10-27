@@ -84,6 +84,20 @@ pre {
     overflow-x: hidden; /* Hide horizontal scrollbar */
 }
 
+.view-paste {
+    width: calc(80% - 30px);
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+@media screen and (max-width: 700px) {
+    .view-paste {
+        width: calc(100% - 24px);
+        font-size: 12px;
+    }
+}
+
 .reglog-form {
     display: flex;
     justify-content: center;
@@ -106,15 +120,15 @@ pre {
 }
 
 .bin-text {
-    background: transparent;
-    border:0;
-    color:#fff;
-    font-size:1em;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
     --webkit-font-smoothing:antialiased;
-    line-height:1;
-    height:100%;
-    margin-top:1em;
-    margin-left: 1em;
+    line-height:1.5;
+    height: calc(100vh - 2em);
+    margin: 1em 0 1em 1em;
     outline:none;
     position:fixed;
     resize:none;
@@ -125,8 +139,10 @@ pre {
     word-break:break-word;
     overflow-x: hidden; /* Hide horizontal scrollbar */
     z-index:1;
-    width:100%;
+    width: calc(80% - 2em);
+    right: calc(20% + 1em);
     box-sizing: border-box;
+    padding: 12px;
     font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
@@ -149,7 +165,20 @@ pre {
     transition: right 0.5s ease;
     top:0;
     width:20%;
+    box-sizing: border-box;
     z-index:10;
+}
+
+@media screen and (max-width: 700px) {
+    .bin-text {
+        width: calc(68% - 1.5em);
+        right: calc(32% + 0.5em);
+    }
+
+    .bin-buttons {
+        width: 32%;
+        padding: 10px;
+    }
 }
 
 .u-perk {
@@ -390,8 +419,8 @@ td a {
 }
     
 td a:hover, td a:focus {
-    color:#ffffff !important;
-    text-decoration:underline !important;
+    color:#ff7b83 !important;
+    text-decoration:none !important;
 }
 td a:focus {
     outline:5px auto -webkit-focus-ring-color;

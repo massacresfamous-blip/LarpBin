@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/header') %>
+    <style>
+        .hoa-page {
+            display: flex;
+            justify-content: center;
+            width: min(900px, calc(100% - 32px));
+            margin: 44px auto 64px;
+        }
+
+        .hoa-content {
+            padding: 0;
+        }
+
+        .hoa-user-card {
+            display: flex;
+            width: min(100%, 360px);
+            min-height: 280px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            background: rgba(8, 8, 8, 0.76);
+            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
+            text-align: center;
+        }
+
+        .hoa-user-avatar {
+            display: block;
+            width: 58px;
+            height: 58px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            object-fit: cover;
+        }
+
+        .hoa-user-name {
+            margin: 0 0 7px;
+            color: #fff;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .hoa-user-bio {
+            margin: 0;
+            max-width: 280px;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        @media (max-width: 480px) {
+            .hoa-user-card {
+                min-height: 250px;
+                padding: 24px;
+            }
+
+            .hoa-user-avatar {
+                width: 48px;
+                height: 48px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">BREACH BIN</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/newpaste">New Paste</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/upgrades">Upgrades</a></li>
+                <li><a href="/hoa">HOA</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/changelog">Changelog</a></li>
+                        <li><a href="/donate">Donate</a></li>
+                        <li><a href="/prices">Prices</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </li>
+                <% if (loggedIn) { %>
+                    <li><a href="/settings">Settings</a></li>
+                <% } %>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <% if (loggedIn) { %>
+                    <li><a href="/profile?uid=<%= user.id %>">Profile</a></li>
+                    <li><a href="/login/logout">Logout</a></li>
+                <% } else { %>
+                    <li><a href="/signup">Register</a></li>
+                    <li><a href="/login">Login</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="hoa-page">
+        <section class="hoa-content">
+            <article class="hoa-user-card">
+                <img class="hoa-user-avatar" src="/Media/default_profile.jpg" alt="" aria-hidden="true">
+                <div>
+                    <h2 class="hoa-user-name">Coco</h2>
+                    <p class="hoa-user-bio">Trying to get my boy happy, kicked out of 9009 by saying stuff on his account. Love you happy</p>
+                </div>
+            </article>
+        </section>
+    </main>
+    <audio id="hoa-audio" src="/Media/hoa-theme.mp3" autoplay loop preload="auto" hidden aria-hidden="true"></audio>
+    <script>
+        const hoaAudio = document.getElementById('hoa-audio');
+        const tryStartHoaAudio = () => {
+            hoaAudio.play().then(() => {
+                document.removeEventListener('pointerdown', tryStartHoaAudio, true);
+                document.removeEventListener('keydown', tryStartHoaAudio, true);
+            }).catch((error) => {
+                if (error.name !== 'NotAllowedError') {
+                    console.error('Unable to play HOA audio:', error);
+                }
+            });
+        };
+
+        document.addEventListener('pointerdown', tryStartHoaAudio, true);
+        document.addEventListener('keydown', tryStartHoaAudio, true);
+        hoaAudio.addEventListener('error', () => {
+            console.error('HOA audio failed to load:', hoaAudio.error);
+        });
+        tryStartHoaAudio();
+    </script>
+</body>
+
+</html>
