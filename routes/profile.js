@@ -176,6 +176,13 @@ router.get('/', (req, res) => {
                 }
 
                 // Render profile page with user info, pastes, and comments
+                const usernameEffects = new Set(['none', 'glow', 'gradient']);
+                const usernameSizes = new Set(['small', 'medium', 'large']);
+                const usernameWeights = new Set(['normal', 'bold']);
+                const profileLayouts = new Set(['split', 'stacked', 'wide']);
+                const usernameColor = /^#[0-9a-fA-F]{6}$/.test(user.username_color || '')
+                    ? user.username_color
+                    : '#FFFFFF';
                 res.render('pages/profile', {
                     user: user,
                     pastes: pastes,
@@ -185,7 +192,12 @@ router.get('/', (req, res) => {
                     isOwner: Number(req.session && req.session.userId) === Number(userId),
                     canUseAnimatedImages: String(user.role || 'Member').toLowerCase() !== 'member',
                     canUseProfileMusic: hasProfileMusicAccess(user),
-                    isAdminProfile: Number(user.admin) === 1
+                    isAdminProfile: Number(user.admin) === 1 || String(user.role || '').toLowerCase() === 'admin',
+                    usernameColor,
+                    usernameEffect: usernameEffects.has(user.username_effect) ? user.username_effect : 'none',
+                    usernameSize: usernameSizes.has(user.username_size) ? user.username_size : 'medium',
+                    usernameWeight: usernameWeights.has(user.username_weight) ? user.username_weight : 'bold',
+                    profileLayout: profileLayouts.has(user.profile_layout) ? user.profile_layout : 'split'
                 });
             });
         });

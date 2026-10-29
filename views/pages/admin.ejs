@@ -10,6 +10,42 @@
 </head>
 
 <body class="admin-page">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">BREACH BIN</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/newpaste">New Paste</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/upgrades">Upgrades</a></li>
+                <li><a href="/hoa">HOA</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="/faq">About
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/changelog">Changelog</a></li>
+                        <li><a href="/donate">Donate</a></li>
+                        <li><a href="/prices">Prices</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/settings">Settings</a></li>
+                <% if (typeof userId !== 'undefined') { %>
+                    <li><a href="/profile?uid=<%= userId %>">Profile</a></li>
+                <% } %>
+                <li class="active"><a href="/admin">Admin</a></li>
+                <li><a href="/login/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <main class="admin-shell">
         <header class="admin-header">
             <div>
@@ -17,7 +53,6 @@
                 <h1>Admin panel</h1>
                 <p class="admin-welcome">Signed in as <strong><%= username %></strong></p>
             </div>
-            <a class="admin-home-link" href="/">Back to site <span aria-hidden="true">↗</span></a>
         </header>
 
         <section class="admin-card account-switcher" aria-labelledby="account-switch-title">

@@ -11,9 +11,9 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-top: 2px solid rgba(220, 57, 68, 0.86);
             border-radius: 14px;
-            background: rgba(10, 10, 12, 0.78);
+            background: rgba(10, 10, 12, 0.58);
             box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(18px);
             color: #fff;
         }
 
@@ -51,7 +51,224 @@
             padding: clamp(14px, 2.5vw, 22px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.025);
+            background: rgba(255, 255, 255, 0.035);
+            backdrop-filter: blur(8px);
+        }
+
+        .settings-card + .settings-card {
+            margin-top: 18px;
+        }
+
+        .settings-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .settings-field {
+            display: grid;
+            gap: 7px;
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .settings-field input:not([type="color"]),
+        .settings-field select {
+            width: 100%;
+            min-height: 40px;
+            padding: 9px 11px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 5px;
+            background: rgba(17, 17, 22, 0.58);
+            color: #fff;
+            font: inherit;
+        }
+
+        .settings-field input[type="color"] {
+            width: 58px;
+            height: 40px;
+            padding: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 5px;
+            background: rgba(17, 17, 22, 0.58);
+        }
+
+        .username-color-picker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .username-color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .settings-form button.username-color-swatch {
+            width: 23px;
+            height: 23px;
+            min-height: 23px;
+            align-self: center;
+            padding: 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            background: var(--swatch-color);
+            cursor: pointer;
+            font-size: 0;
+            letter-spacing: normal;
+            text-transform: none;
+            transition: transform 0.16s ease, border-color 0.16s ease;
+        }
+
+        .settings-form button.username-color-swatch:not(:disabled):hover {
+            transform: scale(1.12);
+            border-color: #fff;
+            background: var(--swatch-color);
+        }
+
+        .settings-form button.username-color-swatch[aria-pressed="true"] {
+            border-color: #fff;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+        }
+
+        .username-color-swatch:focus-visible {
+            outline: 2px solid #ff7379;
+            outline-offset: 3px;
+        }
+
+        .settings-field small,
+        .settings-note {
+            color: rgba(255, 255, 255, 0.52);
+            font-size: 11px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .settings-form button {
+            align-self: end;
+            min-height: 40px;
+            padding: 0 16px;
+            border: 1px solid rgba(255, 115, 121, 0.48);
+            border-radius: 5px;
+            background: #c51e2a;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.18s ease, transform 0.18s ease;
+        }
+
+        .settings-form button:not(:disabled):hover {
+            transform: translateY(-1px);
+            background: #e02d39;
+        }
+
+        .settings-form button:disabled {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: #333;
+            color: rgba(255, 255, 255, 0.48);
+            cursor: not-allowed;
+        }
+
+        .settings-notice {
+            margin: 0 0 18px;
+            padding: 11px 13px;
+            border: 1px solid rgba(106, 214, 155, 0.3);
+            border-radius: 6px;
+            background: rgba(53, 153, 99, 0.12);
+            color: #b7f1cf;
+            font-size: 13px;
+        }
+
+        .username-preview {
+            display: flex;
+            min-height: 96px;
+            align-items: center;
+            gap: 14px;
+            margin-top: 18px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.09), rgba(0, 0, 0, 0.18));
+            backdrop-filter: blur(8px);
+        }
+
+        .username-preview-avatar {
+            display: grid;
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+            place-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            background: #34343b;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .username-preview-name {
+            color: var(--preview-name-color, #fff);
+            font-size: 23px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .username-preview[data-size="small"] .username-preview-name { font-size: 18px; }
+        .username-preview[data-size="large"] .username-preview-name { font-size: 30px; }
+        .username-preview[data-weight="normal"] .username-preview-name { font-weight: 400; }
+
+        .username-preview[data-effect="glow"] .username-preview-name {
+            text-shadow: 0 0 12px currentColor;
+        }
+
+        .username-preview[data-effect="gradient"] .username-preview-name {
+            background: linear-gradient(90deg, var(--preview-name-color, #fff), #ff8c91);
+            background-clip: text;
+            color: transparent;
+            -webkit-background-clip: text;
+        }
+
+        .username-preview-particle {
+            margin-right: 7px;
+            color: #ffcb8a;
+            font-size: 0.72em;
+            vertical-align: 0.12em;
+        }
+
+        .layout-preview {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(70px, 0.8fr);
+            gap: 7px;
+            min-height: 65px;
+            margin-top: 8px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .layout-preview-block {
+            min-height: 38px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .layout-preview[data-layout="stacked"] {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .layout-preview[data-layout="wide"] {
+            grid-template-columns: minmax(0, 2.4fr) minmax(50px, 0.55fr);
+        }
+
+        .settings-form .settings-submit {
+            grid-column: 1 / -1;
+            justify-self: start;
         }
 
         .background-preview {
@@ -185,7 +402,8 @@
         }
 
         .settings-shell button:focus-visible,
-        .background-form input:focus-visible {
+        .settings-shell input:focus-visible,
+        .settings-shell select:focus-visible {
             outline: 2px solid #ff7379;
             outline-offset: 3px;
         }
@@ -199,6 +417,15 @@
 
             .background-preview {
                 min-height: 190px;
+            }
+
+            .settings-form {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .settings-form .settings-submit {
+                grid-column: auto;
+                width: 100%;
             }
 
             .background-form {
@@ -216,6 +443,7 @@
 
         @media (prefers-reduced-motion: reduce) {
             .background-form input[type="file"]::file-selector-button,
+            .settings-form button,
             .background-form button,
             .reset-form button {
                 transition: none;
@@ -259,9 +487,106 @@
     <main class="settings-shell">
         <header class="settings-heading">
             <span class="settings-eyebrow">Personalize your space</span>
-            <h1>Appearance</h1>
-            <p>Give your profile a look of its own. Your background appears across BreachBin whenever you’re signed in.</p>
+            <h1>Account &amp; appearance</h1>
+            <p>Manage your username and customize how your name and profile look to the community.</p>
         </header>
+
+        <% if (typeof usernameChanged !== 'undefined' && usernameChanged) { %>
+            <p class="settings-notice" role="status">Your username has been changed. You can change it only once.</p>
+        <% } %>
+        <% if (typeof appearanceSaved !== 'undefined' && appearanceSaved) { %>
+            <p class="settings-notice" role="status">Your profile appearance has been saved.</p>
+        <% } %>
+
+        <section class="settings-card" aria-labelledby="username-heading">
+            <h2 id="username-heading" class="settings-eyebrow">Username</h2>
+            <p class="settings-note">You can change your username once. Usernames must be 3–20 characters and contain only letters, numbers, or underscores. Your pastes stay connected to your account.</p>
+            <form class="settings-form" action="/settings/username" method="post">
+                <label class="settings-field" for="username-change-input">
+                    New username
+                    <input id="username-change-input" name="username" type="text" value="<%= user.username %>" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" autocomplete="off" required <%= user.username_changed || (typeof isImpersonating !== 'undefined' && isImpersonating) ? 'disabled' : '' %>>
+                    <% if (user.username_changed) { %>
+                        <small>Your one username change has already been used.</small>
+                    <% } else if (typeof isImpersonating !== 'undefined' && isImpersonating) { %>
+                        <small>Return to your admin account before changing a username.</small>
+                    <% } %>
+                </label>
+                <button type="submit" <%= user.username_changed || (typeof isImpersonating !== 'undefined' && isImpersonating) ? 'disabled' : '' %>>Change username</button>
+            </form>
+        </section>
+
+        <section class="settings-card" aria-labelledby="profile-appearance-heading">
+            <h2 id="profile-appearance-heading" class="settings-eyebrow">Username &amp; profile design</h2>
+            <p class="settings-note">Choose a name color, text treatment, and profile layout. Changes are previewed below before you save.</p>
+            <form class="settings-form" action="/settings/profile-appearance" method="post">
+                <label class="settings-field" for="username-color">
+                    Username color
+                    <span class="username-color-picker">
+                        <input id="username-color" name="usernameColor" type="color" value="<%= user.username_color || '#FFFFFF' %>" aria-label="Custom username color">
+                        <span class="username-color-palette" aria-label="Quick username colors">
+                            <% const usernameColorOptions = [
+                                ['#FFFFFF', 'White'], ['#FF7379', 'Coral'], ['#FFB86C', 'Orange'],
+                                ['#F6E05E', 'Yellow'], ['#68D391', 'Green'], ['#4FD1C5', 'Teal'],
+                                ['#63B3ED', 'Blue'], ['#9F7AEA', 'Purple'], ['#F687B3', 'Pink']
+                            ]; %>
+                            <% usernameColorOptions.forEach(([color, name]) => { %>
+                                <button class="username-color-swatch" type="button" data-color="<%= color %>" style="--swatch-color: <%= color %>" aria-label="<%= name %>" aria-pressed="<%= (user.username_color || '#FFFFFF').toUpperCase() === color ? 'true' : 'false' %>" title="<%= name %>"></button>
+                            <% }); %>
+                        </span>
+                    </span>
+                </label>
+                <label class="settings-field" for="username-effect">
+                    Username effect
+                    <select id="username-effect" name="usernameEffect">
+                        <option value="none" <%= user.username_effect === 'none' ? 'selected' : '' %>>Clean</option>
+                        <option value="glow" <%= user.username_effect === 'glow' ? 'selected' : '' %>>Glow</option>
+                        <option value="gradient" <%= user.username_effect === 'gradient' ? 'selected' : '' %>>Gradient</option>
+                    </select>
+                </label>
+                <label class="settings-field" for="username-size">
+                    Username size
+                    <select id="username-size" name="usernameSize">
+                        <option value="small" <%= user.username_size === 'small' ? 'selected' : '' %>>Small</option>
+                        <option value="medium" <%= user.username_size === 'medium' ? 'selected' : '' %>>Medium</option>
+                        <option value="large" <%= user.username_size === 'large' ? 'selected' : '' %>>Large</option>
+                    </select>
+                </label>
+                <label class="settings-field" for="username-weight">
+                    Username weight
+                    <select id="username-weight" name="usernameWeight">
+                        <option value="normal" <%= user.username_weight === 'normal' ? 'selected' : '' %>>Regular</option>
+                        <option value="bold" <%= user.username_weight === 'bold' ? 'selected' : '' %>>Bold</option>
+                    </select>
+                </label>
+                <label class="settings-field" for="profile-layout">
+                    Profile layout
+                    <select id="profile-layout" name="profileLayout">
+                        <option value="split" <%= user.profile_layout === 'split' ? 'selected' : '' %>>Split columns</option>
+                        <option value="stacked" <%= user.profile_layout === 'stacked' ? 'selected' : '' %>>Stacked sections</option>
+                        <option value="wide" <%= user.profile_layout === 'wide' ? 'selected' : '' %>>Wide profile</option>
+                    </select>
+                    <span class="layout-preview" id="layout-preview" data-layout="<%= user.profile_layout || 'split' %>" aria-label="Profile layout preview">
+                        <span class="layout-preview-block"></span>
+                        <span class="layout-preview-block"></span>
+                    </span>
+                </label>
+                <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                    <label class="settings-field" for="username-particle">
+                        Admin username particle
+                        <input id="username-particle" name="usernameParticle" type="text" value="<%= user.username_particle || '' %>" maxlength="12" placeholder="✦" autocomplete="off">
+                        <small>Optional decorative symbol shown before your username. Up to 12 characters; HTML is displayed as text.</small>
+                    </label>
+                <% } %>
+                <button class="settings-submit" type="submit">Save profile design</button>
+            </form>
+            <div class="username-preview" id="username-preview" data-effect="<%= user.username_effect || 'none' %>" data-size="<%= user.username_size || 'medium' %>" data-weight="<%= user.username_weight || 'bold' %>" style="--preview-name-color: <%= user.username_color || '#FFFFFF' %>" aria-label="Live username and profile preview">
+                <span class="username-preview-avatar" aria-hidden="true">B</span>
+                <span class="username-preview-name">
+                    <% if (typeof isAdmin !== 'undefined' && isAdmin && user.username_particle) { %><span class="username-preview-particle" id="username-preview-particle"><%= user.username_particle %></span><% } else { %><span class="username-preview-particle" id="username-preview-particle" hidden></span><% } %>
+                    <span id="username-preview-text"><%= user.username %></span>
+                </span>
+            </div>
+        </section>
 
         <section class="settings-card" aria-labelledby="background-heading">
             <h2 id="background-heading" class="settings-eyebrow">Profile background</h2>
@@ -288,9 +613,21 @@
     <script>
         const backgroundInput = document.getElementById('background-file');
         const backgroundPreview = document.getElementById('background-preview');
+        const usernameInput = document.getElementById('username-change-input');
+        const usernameColor = document.getElementById('username-color');
+        const usernameColorSwatches = document.querySelectorAll('.username-color-swatch');
+        const usernameEffect = document.getElementById('username-effect');
+        const usernameSize = document.getElementById('username-size');
+        const usernameWeight = document.getElementById('username-weight');
+        const profileLayout = document.getElementById('profile-layout');
+        const usernameParticle = document.getElementById('username-particle');
+        const usernamePreview = document.getElementById('username-preview');
+        const usernamePreviewText = document.getElementById('username-preview-text');
+        const usernamePreviewParticle = document.getElementById('username-preview-particle');
+        const layoutPreview = document.getElementById('layout-preview');
         let previewObjectUrl;
 
-        backgroundInput.addEventListener('change', () => {
+        if (backgroundInput) backgroundInput.addEventListener('change', () => {
             const file = backgroundInput.files && backgroundInput.files[0];
             if (!file) return;
 
@@ -299,6 +636,34 @@
             backgroundPreview.style.backgroundImage =
                 `linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.2)), url("${previewObjectUrl}")`;
             backgroundPreview.setAttribute('aria-label', `Selected background preview: ${file.name}`);
+        });
+
+        const updateUsernamePreview = () => {
+            if (usernameInput && usernameInput.value.trim()) usernamePreviewText.textContent = usernameInput.value.trim();
+            if (usernameColor) {
+                usernamePreview.style.setProperty('--preview-name-color', usernameColor.value);
+                usernameColorSwatches.forEach((swatch) => {
+                    swatch.setAttribute('aria-pressed', String(swatch.dataset.color === usernameColor.value.toUpperCase()));
+                });
+            }
+            if (usernameEffect) usernamePreview.dataset.effect = usernameEffect.value;
+            if (usernameSize) usernamePreview.dataset.size = usernameSize.value;
+            if (usernameWeight) usernamePreview.dataset.weight = usernameWeight.value;
+            if (usernameParticle) {
+                usernamePreviewParticle.textContent = usernameParticle.value;
+                usernamePreviewParticle.hidden = !usernameParticle.value;
+            }
+            if (profileLayout && layoutPreview) layoutPreview.dataset.layout = profileLayout.value;
+        };
+
+        [usernameInput, usernameColor, usernameEffect, usernameSize, usernameWeight, profileLayout, usernameParticle].forEach((input) => {
+            if (input) input.addEventListener('input', updateUsernamePreview);
+        });
+        usernameColorSwatches.forEach((swatch) => {
+            swatch.addEventListener('click', () => {
+                usernameColor.value = swatch.dataset.color;
+                updateUsernamePreview();
+            });
         });
     </script>
 </body>

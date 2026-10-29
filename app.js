@@ -142,7 +142,14 @@ async function setupDatabase() {
             profile_picture TEXT,
             banner TEXT,
             profile_music TEXT,
-            background_image TEXT
+            background_image TEXT,
+            username_changed BOOLEAN NOT NULL DEFAULT 0,
+            username_color TEXT NOT NULL DEFAULT '#FFFFFF',
+            username_effect TEXT NOT NULL DEFAULT 'none',
+            username_size TEXT NOT NULL DEFAULT 'medium',
+            username_weight TEXT NOT NULL DEFAULT 'bold',
+            profile_layout TEXT NOT NULL DEFAULT 'split',
+            username_particle TEXT NOT NULL DEFAULT ''
         )`);
     const userColumns = await getDatabaseRows('PRAGMA table_info(users)');
     const existingColumns = new Set(userColumns.map((column) => column.name));
@@ -152,7 +159,14 @@ async function setupDatabase() {
         ['profile_picture', 'TEXT'],
         ['banner', 'TEXT'],
         ['profile_music', 'TEXT'],
-        ['background_image', 'TEXT']
+        ['background_image', 'TEXT'],
+        ['username_changed', 'BOOLEAN NOT NULL DEFAULT 0'],
+        ['username_color', "TEXT NOT NULL DEFAULT '#FFFFFF'"],
+        ['username_effect', "TEXT NOT NULL DEFAULT 'none'"],
+        ['username_size', "TEXT NOT NULL DEFAULT 'medium'"],
+        ['username_weight', "TEXT NOT NULL DEFAULT 'bold'"],
+        ['profile_layout', "TEXT NOT NULL DEFAULT 'split'"],
+        ['username_particle', "TEXT NOT NULL DEFAULT ''"]
     ];
 
     for (const [columnName, columnDefinition] of newColumns) {
@@ -197,6 +211,7 @@ async function setupDatabase() {
 
 // Routes
 app.use('/api/cli', require('./routes/cli-api')(db));
+app.use('/settings', require('./routes/settings'));
 app.use('/', require('./routes/homepage'));
 app.use('/newpaste', require('./routes/newpaste'));
 app.use('/users', require('./routes/users'));
@@ -213,6 +228,5 @@ app.use('/paste', require('./routes/viewpaste'));
 app.use('/login', require('./routes/login'));
 app.use('/signup', require('./routes/signup'));
 app.use('/profile', require('./routes/profile'));
-app.use('/settings', require('./routes/settings'));
 app.use('/hoa', require('./routes/hoa'));
 app.use('/admin', require('./routes/admin'));

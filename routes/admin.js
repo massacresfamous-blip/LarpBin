@@ -34,7 +34,8 @@ function isAdmin(req, res, next) {
 // Admin Panel Page
 router.get('/', isAdmin, (req, res) => {
     res.render('pages/admin', {
-        username: req.adminUser.username
+        username: req.adminUser.username,
+        userId: req.adminUser.id
     });
 });
 

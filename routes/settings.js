@@ -10,9 +10,85 @@ const uploadDirectory = path.resolve(__dirname, '..', 'public', 'uploads', 'back
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 const db = new sqlite3.Database(dbPath);
 
+function getDatabaseRow(sql, parameters = []) {
+    return new Promise((resolve, reject) => {
+        db.get(sql, parameters, (err, row) => err ? reject(err) : resolve(row));
+    });
+}
+
+function runDatabaseQuery(sql, parameters = []) {
+    return new Promise((resolve, reject) => {
+        db.run(sql, parameters, function (err) {
+            if (err) reject(err);
+            else resolve({ changes: this.changes });
+        });
+    });
+}
+
+async function changeUsername(userId, username) {
+    const transactionDb = new sqlite3.Database(dbPath);
+    const getRow = (sql, parameters = []) => new Promise((resolve, reject) => {
+        transactionDb.get(sql, parameters, (err, row) => err ? reject(err) : resolve(row));
+    });
+    const run = (sql, parameters = []) => new Promise((resolve, reject) => {
+        transactionDb.run(sql, parameters, function (err) {
+            if (err) reject(err);
+            else resolve({ changes: this.changes });
+        });
+    });
+    let transactionStarted = false;
+
+    try {
+        await run('BEGIN IMMEDIATE');
+        transactionStarted = true;
+        const account = await getRow('SELECT username, username_changed FROM users WHERE id = ?', [userId]);
+        if (!account) return { status: 404, message: 'User not found' };
+        if (Number(account.username_changed) === 1) {
+            return { status: 409, message: 'Your one username change has already been used' };
+        }
+        if (account.username === username) return { status: 400, message: 'Choose a different username' };
+
+        const existingUser = await getRow(
+            'SELECT id FROM users WHERE username = ? COLLATE NOCASE AND id != ?',
+            [username, userId]
+        );
+        if (existingUser) return { status: 409, message: 'That username is already taken' };
+
+        const update = await run(
+            'UPDATE users SET username = ?, username_changed = 1 WHERE id = ? AND username_changed = 0',
+            [username, userId]
+        );
+        if (update.changes !== 1) {
+            return { status: 409, message: 'Your one username change has already been used' };
+        }
+        await run('UPDATE pastes SET user_name = ? WHERE user_name = ?', [username, account.username]);
+        await run('COMMIT');
+        transactionStarted = false;
+        return { status: 200 };
+    } catch (error) {
+        if (error.code === 'SQLITE_CONSTRAINT') {
+            return { status: 409, message: 'That username is already taken' };
+        }
+        throw error;
+    } finally {
+        if (transactionStarted) {
+            await run('ROLLBACK').catch((error) => {
+                console.error('Error rolling back username change:', error);
+            });
+        }
+        await new Promise((resolve, reject) => {
+            transactionDb.close((err) => err ? reject(err) : resolve());
+        });
+    }
+}
+
 function requireSignIn(req, res, next) {
     if (!req.session || !req.session.userId) return res.redirect('/login');
     next();
+}
+
+function isAdmin(user) {
+    return Number(user.admin) === 1 || String(user.role || '').toLowerCase() === 'admin';
 }
 
 function getImageExtension(data) {
@@ -30,18 +106,100 @@ function removePreviousBackground(backgroundUrl) {
 }
 
 router.get('/', requireSignIn, (req, res) => {
-    db.get('SELECT id, username, background_image FROM users WHERE id = ?', [req.session.userId], (err, user) => {
+    db.get(
+        `SELECT id, username, admin, role, background_image, username_changed,
+                username_color, username_effect, username_size, username_weight,
+                profile_layout, username_particle
+         FROM users WHERE id = ?`,
+        [req.session.userId],
+        (err, user) => {
         if (err) {
             console.error('Error loading settings:', err);
             return res.status(500).send('Database error');
         }
         if (!user) return res.redirect('/login/logout');
+        if (!/^#[0-9a-fA-F]{6}$/.test(user.username_color || '')) user.username_color = '#FFFFFF';
         res.render('pages/settings', {
             user,
             currentBackground: user.background_image,
+            isAdmin: isAdmin(user),
+            isImpersonating: Boolean(req.session.adminImpersonatorId),
+            usernameChanged: req.query.usernameChanged === '1',
+            appearanceSaved: req.query.appearanceSaved === '1',
             loggedIn: true
         });
-    });
+        }
+    );
+});
+
+router.post('/username', requireSignIn, async (req, res) => {
+    if (req.session.adminImpersonatorId) {
+        return res.status(403).send('Return to the admin account before changing a username');
+    }
+
+    const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
+    if (!/^[A-Za-z0-9_]{3,20}$/.test(username)) {
+        return res.status(400).send('Usernames must be 3–20 characters and use only letters, numbers, and underscores');
+    }
+
+    try {
+        const result = await changeUsername(req.session.userId, username);
+        if (result.status !== 200) return res.status(result.status).send(result.message);
+
+        res.cookie('username', username, { httpOnly: true });
+        res.redirect('/settings?usernameChanged=1');
+    } catch (error) {
+        console.error('Username change failed:', error);
+        res.status(500).send('Unable to change username');
+    }
+});
+
+router.post('/profile-appearance', requireSignIn, async (req, res) => {
+    const usernameColor = typeof req.body.usernameColor === 'string' ? req.body.usernameColor : '';
+    const usernameEffect = typeof req.body.usernameEffect === 'string' ? req.body.usernameEffect : '';
+    const usernameSize = typeof req.body.usernameSize === 'string' ? req.body.usernameSize : '';
+    const usernameWeight = typeof req.body.usernameWeight === 'string' ? req.body.usernameWeight : '';
+    const profileLayout = typeof req.body.profileLayout === 'string' ? req.body.profileLayout : '';
+    const usernameParticle = typeof req.body.usernameParticle === 'string' ? req.body.usernameParticle.trim() : '';
+    const effectOptions = new Set(['none', 'glow', 'gradient']);
+    const sizeOptions = new Set(['small', 'medium', 'large']);
+    const weightOptions = new Set(['normal', 'bold']);
+    const layoutOptions = new Set(['split', 'stacked', 'wide']);
+
+    if (!/^#[0-9a-fA-F]{6}$/.test(usernameColor)
+        || !effectOptions.has(usernameEffect)
+        || !sizeOptions.has(usernameSize)
+        || !weightOptions.has(usernameWeight)
+        || !layoutOptions.has(profileLayout)
+        || Array.from(usernameParticle).length > 12
+        || /[\s<>\u0000-\u001f\u007f]/u.test(usernameParticle)) {
+        return res.status(400).send('Invalid profile appearance settings');
+    }
+
+    try {
+        const user = await getDatabaseRow('SELECT admin, role FROM users WHERE id = ?', [req.session.userId]);
+        if (!user) return res.status(404).send('User not found');
+
+        if (isAdmin(user)) {
+            await runDatabaseQuery(
+                `UPDATE users
+                 SET username_color = ?, username_effect = ?, username_size = ?,
+                     username_weight = ?, profile_layout = ?, username_particle = ?
+                 WHERE id = ?`,
+                [usernameColor.toUpperCase(), usernameEffect, usernameSize, usernameWeight, profileLayout, usernameParticle, req.session.userId]
+            );
+        } else {
+            await runDatabaseQuery(
+                `UPDATE users SET username_color = ?, username_effect = ?, username_size = ?,
+                 username_weight = ?, profile_layout = ? WHERE id = ?`,
+                [usernameColor.toUpperCase(), usernameEffect, usernameSize, usernameWeight, profileLayout, req.session.userId]
+            );
+        }
+        res.redirect('/settings?appearanceSaved=1');
+    } catch (error) {
+        console.error('Profile appearance update failed:', error);
+        res.status(500).send('Unable to save profile appearance');
+    }
 });
 
 router.post('/background', requireSignIn, async (req, res) => {
